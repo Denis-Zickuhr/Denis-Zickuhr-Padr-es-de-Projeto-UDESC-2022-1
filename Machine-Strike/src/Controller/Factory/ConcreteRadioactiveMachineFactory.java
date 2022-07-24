@@ -1,6 +1,8 @@
 package Controller.Factory;
 
 import Model.AbstractModel.AbstractMachine.AbstractProduct.MachineBeastEntity;
+import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
+import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.MachineSoldierEntity;
 import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
 import Model.ConcreteModel.ConcreteMachine.Basic.SoldierMachine;
 import Model.ConcreteModel.ConcreteMachine.Basic.KingMachine;
@@ -25,9 +27,8 @@ public class ConcreteRadioactiveMachineFactory implements AbstractMachineFactory
     }
 
     @Override
-    public SoldierMachine createSoldierMachine() throws Exception {
-        // Aqui vamos usar o builder
-        return null;
+    public MachineSoldierEntity createSoldierMachine(AbstractStrategy s) throws Exception {
+        return s.buildRadio();
     }
 
 }

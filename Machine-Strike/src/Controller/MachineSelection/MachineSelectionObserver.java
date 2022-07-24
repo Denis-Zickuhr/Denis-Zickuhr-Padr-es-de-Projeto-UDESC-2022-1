@@ -1,5 +1,6 @@
 package Controller.MachineSelection;
 
+import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
 import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
 
 public interface MachineSelectionObserver {
@@ -10,5 +11,7 @@ public interface MachineSelectionObserver {
     void newMachineClicked();
     void radMachineClicked();
     void drawMachine(Machine machine);
+    void addPieceStrategy(AbstractStrategy st);
+    AbstractStrategy getStrategy();
 
 }

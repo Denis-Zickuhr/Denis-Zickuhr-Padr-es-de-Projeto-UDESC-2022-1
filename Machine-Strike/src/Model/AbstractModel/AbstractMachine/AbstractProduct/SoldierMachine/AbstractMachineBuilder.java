@@ -30,7 +30,7 @@ public abstract class AbstractMachineBuilder extends Machine {
         armors = new Armor[]{Armor.Neutral, Armor.Neutral, Armor.Neutral, Armor.Neutral};
     }
 
-    public AbstractMachineBuilder buildHead(Head head) {
+    public AbstractMachineBuilder buildHead(Class<Head> head) {
 
         if (this.head != null) {
             this.health -= this.head.getHealth();
@@ -38,12 +38,17 @@ public abstract class AbstractMachineBuilder extends Machine {
             this.attackDistance -= this.head.getAttackDistance();
             this.moveSpan -= this.head.getMoveSpan();
         }
-        this.head = head;
+        this.head = head.cast(head);
+//
+//        this.health += head.getHealth();
+//        this.attackPoints += head.getAttackPoints();
+//        this.attackDistance += head.getAttackDistance();
+//        this.moveSpan += head.getMoveSpan();
 
-        this.health += head.getHealth();
-        this.attackPoints += head.getAttackPoints();
-        this.attackDistance += head.getAttackDistance();
-        this.moveSpan += head.getMoveSpan();
+        this.health += this.head.getHealth();
+        this.attackPoints += this.head.getAttackPoints();
+        this.attackDistance += this.head.getAttackDistance();
+        this.moveSpan += this.head.getMoveSpan();
         return this;
 
     }

@@ -4,6 +4,7 @@ import Controller.Factory.AbstractMachineFactory;
 import Controller.Factory.ConcreteMachineFactory;
 import Controller.Factory.ConcreteRadioactiveMachineFactory;
 import Controller.MachineSelection.MachineSelectionController;
+import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
 import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
 
 public class MachineSelectionSoldierState extends MachineSelectionState {
@@ -12,20 +13,20 @@ public class MachineSelectionSoldierState extends MachineSelectionState {
         super(controller);
     }
 
-    public MachineSelectionSoldierState(MachineSelectionController controller, AbstractMachineFactory factory) {
-        super(controller, factory);
+    public MachineSelectionSoldierState(MachineSelectionController controller, AbstractMachineFactory factory, AbstractStrategy strategy) {
+        super(controller, factory, strategy);
     }
 
     public void prevMachine(){
-        controller.setState(new MachineSelectionBeastState(getController(), this.factory));
+        controller.setState(new MachineSelectionBeastState(getController(), this.factory, this.strategy));
     };
 
     public void nextMachine(){
-        controller.setState(new MachineSelectionKingState(getController(), this.factory));
+        controller.setState(new MachineSelectionKingState(getController(), this.factory, this.strategy));
     };
 
     public Machine selectMachine() throws Exception {
-        return factory.createSoldierMachine();
+        return factory.createSoldierMachine(getStrategy());
     }
 
     @Override

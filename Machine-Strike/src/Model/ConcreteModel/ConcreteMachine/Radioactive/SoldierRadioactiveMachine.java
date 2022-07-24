@@ -6,11 +6,11 @@ import Model.ConcreteModel.ConcreteMachine.BuilderParts.RadioEmiter.Radio;
 
 public class SoldierRadioactiveMachine extends MachineSoldierEntity {
 
-    public SoldierRadioactiveMachine(RadioactiveMachineBuilder machineBuilder) {
+    public SoldierRadioactiveMachine(MachineBuilder machineBuilder) {
         super(machineBuilder);
     }
 
-    public static class RadioactiveMachineBuilder extends AbstractMachineBuilder {
+    public static class MachineBuilder extends AbstractMachineBuilder {
 
         private int radRadius;
         private Radio radio;
@@ -20,7 +20,7 @@ public class SoldierRadioactiveMachine extends MachineSoldierEntity {
         }
 
         @Override
-        public RadioactiveMachineBuilder buildRadio(Radio radio) {
+        public MachineBuilder buildRadio(Radio radio) {
 
             if (this.radio != null) {
                 this.health -= this.radio.getHealth();

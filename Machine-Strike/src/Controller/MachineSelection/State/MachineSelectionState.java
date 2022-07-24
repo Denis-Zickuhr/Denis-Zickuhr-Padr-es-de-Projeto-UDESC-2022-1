@@ -4,12 +4,22 @@ import Controller.Factory.AbstractMachineFactory;
 import Controller.Factory.ConcreteMachineFactory;
 import Controller.Factory.ConcreteRadioactiveMachineFactory;
 import Controller.MachineSelection.MachineSelectionController;
+import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
 import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
 
 public abstract class MachineSelectionState {
 
     protected final MachineSelectionController controller;
     protected AbstractMachineFactory factory;
+    AbstractStrategy strategy;
+
+    public AbstractStrategy getStrategy() {
+        return strategy;
+    }
+
+    public void setStrategy(AbstractStrategy strategy) {
+        this.strategy = strategy;
+    }
 
     // Construtor do estado inicial
     public MachineSelectionState(MachineSelectionController controller) {
@@ -17,9 +27,10 @@ public abstract class MachineSelectionState {
         factory = new ConcreteMachineFactory();
     }
 
-    public MachineSelectionState(MachineSelectionController controller, AbstractMachineFactory factory) {
+    public MachineSelectionState(MachineSelectionController controller, AbstractMachineFactory factory, AbstractStrategy strategy) {
         this.controller = controller;
         this.factory = factory;
+        this.strategy = strategy;
     }
 
     public MachineSelectionController getController() {

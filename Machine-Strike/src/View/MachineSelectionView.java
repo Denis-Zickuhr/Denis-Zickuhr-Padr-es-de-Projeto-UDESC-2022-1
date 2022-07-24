@@ -2,20 +2,31 @@ package View;
 
 import Controller.MachineSelection.MachineSelectionController;
 import Controller.MachineSelection.MachineSelectionObserver;
+import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
 import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
 import View.Components.ImagePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
 public class MachineSelectionView extends JFrame implements MachineSelectionObserver {
 
     JPanel jp_cp;
+    JComboBox<AbstractStrategy> jb_new;
     String[] imageBuffer;
     String[] machineBuffer = {"Assets\\pieceSelectionBackGround.png"};
     ImagePanel piece;
     MachineSelectionController controller;
+
+    @Override
+    public void addPieceStrategy(AbstractStrategy st){
+        this.jb_new.addItem(st);
+    }
+
+    @Override
+    public AbstractStrategy getStrategy() {
+        return (AbstractStrategy)jb_new.getSelectedItem();
+    }
 
     /**
      * Constructs a new frame that is initially invisible.
@@ -56,7 +67,7 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
 
         JButton jb_prev = new JButton("Peça Anterior");
         JButton jb_next = new JButton("Peça Seguinte");
-        JButton jb_new = new JButton("Peça Nova");
+        jb_new = new JComboBox();
         JButton jb_sel = new JButton("Selecionar");
         JRadioButton jrb_radio = new JRadioButton("Versão Radioativa");
 
@@ -101,7 +112,7 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
 
     @Override
     public void prevMachineClicked() {
-        System.out.println("cheguei querida");
+
     }
 
     @Override
@@ -124,15 +135,16 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
 
     }
 
+    @Override
     public void drawMachine(Machine machine){
         try {
-            String[] newBuffer = rebuffer(this.machineBuffer, machine.getBuffer());
+            String[] newBuffer = rebuff(this.machineBuffer, machine.getBuffer());
             jp_cp.remove(piece);
             piece = new ImagePanel(newBuffer, new Dimension(500, 500));
             jp_cp.add(piece, BorderLayout.CENTER);
             jp_cp.updateUI();
         }catch(Exception e){
-            String[] newBuffer = rebuffer(this.machineBuffer, new String[]{"Assets\\nopiece.png"});
+            String[] newBuffer = rebuff(this.machineBuffer, new String[]{"Assets\\nopiece.png"});
             jp_cp.remove(piece);
             piece = new ImagePanel(newBuffer, new Dimension(500, 500));
             jp_cp.add(piece, BorderLayout.CENTER);
@@ -140,7 +152,7 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
         }
     }
 
-    private String[] rebuffer(String[] buffer, String[] sources){
+    private String[] rebuff(String[] buffer, String[] sources){
         String[] newBuffer = new String[sources.length + buffer.length];
         newBuffer[0] = buffer[0];
         System.arraycopy(sources, 0, newBuffer, 1, sources.length + 1 - 1);

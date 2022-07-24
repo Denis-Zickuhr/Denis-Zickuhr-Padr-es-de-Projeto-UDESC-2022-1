@@ -5,6 +5,9 @@ import Controller.Factory.ConcreteMachineFactory;
 import Controller.Factory.ConcreteRadioactiveMachineFactory;
 import Controller.MachineSelection.State.MachineSelectionKingState;
 import Controller.MachineSelection.State.MachineSelectionState;
+import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
+import Model.ConcreteModel.ConcreteMachine.ConcreteStrategy.GrazerStrikeStrategy;
+import Model.ConcreteModel.ConcreteMachine.ConcreteStrategy.StrikeStrategy;
 import View.MachineSelectionView;
 
 import java.util.ArrayList;
@@ -17,9 +20,8 @@ public class MachineSelectionController{
     private MachineSelectionState state = new MachineSelectionKingState(this);
 
     public MachineSelectionState getState() {
-        return state;
+        return this.state;
     }
-
     public void setState(MachineSelectionState state) {
         this.state = state;
     }
@@ -27,9 +29,16 @@ public class MachineSelectionController{
     public void attach(MachineSelectionObserver observer){
         this.observer.add(observer);
     }
-
     public MachineSelectionController() throws Exception {
         MachineSelectionView cl = new MachineSelectionView(this);
+        for (MachineSelectionObserver obs : observer) {
+            obs.drawMachine(state.selectMachine());
+            for (AbstractStrategy s: getStrategies()
+                 ) {
+                obs.addPieceStrategy(s);
+            }
+            getState().setStrategy(obs.getStrategy());
+        }
     }
 
     public void prevMachine() throws Exception {
@@ -47,6 +56,7 @@ public class MachineSelectionController{
     public void newMachine() {
         for (MachineSelectionObserver obs : observer) {
             obs.nextMachineClicked();
+            getState().setStrategy(obs.getStrategy());
         }
     }
     public void selectMachine() throws Exception {
@@ -55,15 +65,19 @@ public class MachineSelectionController{
             obs.nextMachineClicked();
         }
     }
-
     public void toggleRadMachine(boolean selected) throws Exception {
         state.changeFactory(selected);
+    }
+
+    public static AbstractStrategy[] getStrategies(){
+        AbstractStrategy[] st = new AbstractStrategy[1];
+        st[0] = new StrikeStrategy();
+        return st;
     }
 
     public static void main(String[] args) throws Exception {
         MachineSelectionController msc = new MachineSelectionController();
     }
-
 }
 
 
