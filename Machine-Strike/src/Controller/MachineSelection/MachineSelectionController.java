@@ -32,16 +32,16 @@ public class MachineSelectionController{
         MachineSelectionView cl = new MachineSelectionView(this);
     }
 
-    public void prevMachine() {
+    public void prevMachine() throws Exception {
         state.prevMachine();
         for (MachineSelectionObserver obs : observer) {
-            obs.prevMachineClicked();
+            obs.drawMachine(state.selectMachine());
         }
     }
     public void nextMachine() throws Exception {
         state.nextMachine();
         for (MachineSelectionObserver obs : observer) {
-            obs.nextMachineClicked();
+            obs.drawMachine(state.selectMachine());
         }
     }
     public void newMachine() {
