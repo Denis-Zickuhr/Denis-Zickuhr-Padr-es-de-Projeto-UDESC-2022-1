@@ -1,13 +1,11 @@
 package View;
 
-import Controller.MachineSelectionController;
-import Controller.MachineSelectionObserver;
+import Controller.MachineSelection.MachineSelectionController;
+import Controller.MachineSelection.MachineSelectionObserver;
 import View.Components.ImagePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MachineSelectionView extends JFrame implements MachineSelectionObserver {
 
@@ -59,10 +57,28 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
         JRadioButton jrb_radio = new JRadioButton("Versão Radioativa");
 
         jb_prev.addActionListener(evt -> controller.prevMachine());
-        jb_next.addActionListener(evt -> controller.nextMachine());
+        jb_next.addActionListener(evt -> {
+            try {
+                controller.nextMachine();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
         jb_new.addActionListener(evt -> controller.newMachine());
-        jb_sel.addActionListener(evt -> controller.selectMachine());
-        jrb_radio.addActionListener(evt -> controller.toggleRadMachine());
+        jb_sel.addActionListener(evt -> {
+            try {
+                controller.selectMachine();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        jrb_radio.addActionListener(evt -> {
+            try {
+                controller.toggleRadMachine(jrb_radio.isSelected());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 
         jp_buttons.add(jb_prev);
         jp_buttons.add(jb_next);
