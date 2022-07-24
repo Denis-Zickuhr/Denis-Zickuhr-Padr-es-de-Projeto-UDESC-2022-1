@@ -38,9 +38,11 @@ public class ImagePanel extends JPanel{
         try {
             for (String s: paths
                  ) {
-                BufferedImage bufferedImage = ImageIO.read(new File(paths[i]));
-                setPreferredSize(dimension);
-                images[i] = bufferedImage;
+                if(s != null){
+                    BufferedImage bufferedImage = ImageIO.read(new File(paths[i]));
+                    setPreferredSize(dimension);
+                    images[i] = bufferedImage;
+                }
                 i++;
             }
         } catch (IOException e) {
@@ -54,8 +56,10 @@ public class ImagePanel extends JPanel{
         try {
             for (String s: paths
             ) {
-                BufferedImage bufferedImage = ImageIO.read(new File(paths[i]));
-                images[i] = bufferedImage;
+                if(s != null){
+                    BufferedImage bufferedImage = ImageIO.read(new File(paths[i]));
+                    images[i] = bufferedImage;
+                }
                 i++;
             }
         } catch (IOException e) {

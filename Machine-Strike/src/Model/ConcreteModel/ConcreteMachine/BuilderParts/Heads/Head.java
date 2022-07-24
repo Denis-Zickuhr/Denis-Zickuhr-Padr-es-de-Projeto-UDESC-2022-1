@@ -2,16 +2,23 @@ package Model.ConcreteModel.ConcreteMachine.BuilderParts.Heads;
 
 public abstract class Head {
 
-    public int health;
-    public int attackPoints;
-    public int attackDistance;
-    public int moveSpan;
+    protected int health;
+    protected int attackPoints;
+    protected int attackDistance;
+    protected int moveSpan;
+    protected String s = "#";
+    protected String b = "head.png";
+    protected String[] buffer;
 
     public Head() {
         this.health = 1;
         this.attackPoints = 0;
         this.attackDistance = 0;
         this.moveSpan = 0;
+    }
+
+    public String[] getBuffer() {
+        return buffer;
     }
 
     public int getHealth() {

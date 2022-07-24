@@ -8,6 +8,7 @@ import View.Components.ImagePanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 public class MachineSelectionView extends JFrame implements MachineSelectionObserver {
 
@@ -25,7 +26,11 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
 
     @Override
     public AbstractStrategy getStrategy() {
-        return (AbstractStrategy)jb_new.getSelectedItem();
+        try {
+            return (AbstractStrategy) jb_new.getSelectedItem();
+        }catch(Exception e){
+            return null;
+        }
     }
 
     /**
@@ -85,7 +90,13 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
                 e.printStackTrace();
             }
         });
-        jb_new.addActionListener(evt -> controller.newMachine());
+        jb_new.addActionListener(evt -> {
+            try {
+                controller.newMachine();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
         jb_sel.addActionListener(evt -> {
             try {
                 controller.selectMachine();
@@ -156,6 +167,10 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
         String[] newBuffer = new String[sources.length + buffer.length];
         newBuffer[0] = buffer[0];
         System.arraycopy(sources, 0, newBuffer, 1, sources.length + 1 - 1);
+        for (int i = 0; i < newBuffer.length; i++) {
+            if(newBuffer[i] != null)
+            newBuffer[i] = newBuffer[i].replaceAll("#", "large");
+        }
         return newBuffer;
     }
 }

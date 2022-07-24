@@ -15,7 +15,7 @@ public abstract class AbstractStrategy {
         return this.description;
     }
 
-    public abstract MachineSoldierEntity build() throws ClassNotFoundException;
+    public abstract MachineSoldierEntity build();
 
     public abstract MachineSoldierEntity buildRadio();
 

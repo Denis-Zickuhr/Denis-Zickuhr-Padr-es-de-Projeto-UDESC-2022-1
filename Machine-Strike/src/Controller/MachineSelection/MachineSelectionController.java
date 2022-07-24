@@ -1,13 +1,11 @@
 package Controller.MachineSelection;
 
 import Controller.Factory.AbstractMachineFactory;
-import Controller.Factory.ConcreteMachineFactory;
-import Controller.Factory.ConcreteRadioactiveMachineFactory;
 import Controller.MachineSelection.State.MachineSelectionKingState;
 import Controller.MachineSelection.State.MachineSelectionState;
 import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
-import Model.ConcreteModel.ConcreteMachine.ConcreteStrategy.GrazerStrikeStrategy;
-import Model.ConcreteModel.ConcreteMachine.ConcreteStrategy.StrikeStrategy;
+import Model.ConcreteModel.ConcreteMachine.ConcreteStrategy.BlackStrategy;
+import Model.ConcreteModel.ConcreteMachine.ConcreteStrategy.WhiteStrategy;
 import View.MachineSelectionView;
 
 import java.util.ArrayList;
@@ -53,10 +51,11 @@ public class MachineSelectionController{
             obs.drawMachine(state.selectMachine());
         }
     }
-    public void newMachine() {
+    public void newMachine() throws Exception {
         for (MachineSelectionObserver obs : observer) {
             obs.nextMachineClicked();
             getState().setStrategy(obs.getStrategy());
+            obs.drawMachine(state.selectMachine());
         }
     }
     public void selectMachine() throws Exception {
@@ -70,8 +69,9 @@ public class MachineSelectionController{
     }
 
     public static AbstractStrategy[] getStrategies(){
-        AbstractStrategy[] st = new AbstractStrategy[1];
-        st[0] = new StrikeStrategy();
+        AbstractStrategy[] st = new AbstractStrategy[2];
+        st[0] = new BlackStrategy();
+        st[1] = new WhiteStrategy();
         return st;
     }
 

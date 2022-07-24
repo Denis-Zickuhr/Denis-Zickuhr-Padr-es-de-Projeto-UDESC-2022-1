@@ -20,7 +20,7 @@ public class SoldierRadioactiveMachine extends MachineSoldierEntity {
         }
 
         @Override
-        public MachineBuilder buildRadio(Radio radio) {
+        public MachineBuilder addRadio(Radio radio) {
 
             if (this.radio != null) {
                 this.health -= this.radio.getHealth();
@@ -30,10 +30,12 @@ public class SoldierRadioactiveMachine extends MachineSoldierEntity {
             }
             this.radio = radio;
 
+
             this.health += radio.getHealth();
             this.attackPoints += radio.getAttackPoints();
             this.attackDistance += radio.getAttackDistance();
             this.moveSpan += radio.getMoveSpan();
+            this.buffer[2] = radio.getBuffer()[0];
             return this;
 
         }

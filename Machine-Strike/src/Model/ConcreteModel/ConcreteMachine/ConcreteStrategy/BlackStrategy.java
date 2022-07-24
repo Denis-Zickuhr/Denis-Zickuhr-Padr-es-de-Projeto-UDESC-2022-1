@@ -3,27 +3,28 @@ package Model.ConcreteModel.ConcreteMachine.ConcreteStrategy;
 import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
 import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.MachineSoldierEntity;
 import Model.ConcreteModel.ConcreteMachine.Basic.SoldierMachine;
-import Model.ConcreteModel.ConcreteMachine.BuilderParts.Heads.Head;
-import Model.ConcreteModel.ConcreteMachine.BuilderParts.Heads.HeadDestroyerOfWorld;
+import Model.ConcreteModel.ConcreteMachine.BuilderParts.Heads.HeadBlack;
+import Model.ConcreteModel.ConcreteMachine.BuilderParts.Legs.LegBlack;
+import Model.ConcreteModel.ConcreteMachine.BuilderParts.Torsos.TorsoBlack;
 import Model.ConcreteModel.ConcreteMachine.Radioactive.SoldierRadioactiveMachine;
 
-public class StrikeStrategy extends AbstractStrategy {
+public class BlackStrategy extends AbstractStrategy {
 
-    public StrikeStrategy() {
-        super("Grazer Strike");
+    public BlackStrategy() {
+        super("Burrower Strike");
     }
 
     @Override
-    public MachineSoldierEntity build() throws ClassNotFoundException {
+    public MachineSoldierEntity build(){
         SoldierMachine.MachineBuilder machineBuilder = new SoldierMachine.MachineBuilder();
-        machineBuilder.buildHead((Class<Head>) Class.forName("Model.ConcreteModel.ConcreteMachine.BuilderParts.Heads.HeadDefault"));//.buildLegs().buildTorso().buildArmor();
+        machineBuilder.addHead(new HeadBlack()).addLegs(new LegBlack()).addTorso(new TorsoBlack());//.buildArmor();
         return machineBuilder.build();
     }
 
     @Override
     public MachineSoldierEntity buildRadio() {
         SoldierRadioactiveMachine.MachineBuilder machineBuilder = new SoldierRadioactiveMachine.MachineBuilder();
-        //machineBuilder.buildHead(new HeadDestroyerOfWorld());//.buildLegs().buildTorso().buildArmor();
+        machineBuilder.addHead(new HeadBlack()).addLegs(new LegBlack());//.buildTorso().buildArmor();
         return machineBuilder.build();
     }
 

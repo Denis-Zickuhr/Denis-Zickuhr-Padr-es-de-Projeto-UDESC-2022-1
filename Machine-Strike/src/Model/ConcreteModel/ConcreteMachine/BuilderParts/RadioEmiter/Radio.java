@@ -2,11 +2,12 @@ package Model.ConcreteModel.ConcreteMachine.BuilderParts.RadioEmiter;
 
 public abstract class Radio {
 
-    private int health;
-    private int attackPoints;
-    private int attackDistance;
-    private int moveSpan;
-    private int radRadius;
+    protected int health;
+    protected int attackPoints;
+    protected int attackDistance;
+    protected int moveSpan;
+    protected int radRadius;
+    protected String[] buffer;
 
 
     public Radio() {
@@ -15,6 +16,10 @@ public abstract class Radio {
         this.attackDistance = 0;
         this.moveSpan = 0;
         this.radRadius = 0;
+    }
+
+    public String[] getBuffer() {
+        return buffer;
     }
 
     public int getHealth() {

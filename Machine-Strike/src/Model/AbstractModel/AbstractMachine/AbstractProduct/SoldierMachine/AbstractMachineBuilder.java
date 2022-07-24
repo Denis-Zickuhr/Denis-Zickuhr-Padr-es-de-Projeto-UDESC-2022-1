@@ -8,12 +8,15 @@ import Model.ConcreteModel.ConcreteMachine.BuilderParts.Legs.Leg;
 import Model.ConcreteModel.ConcreteMachine.BuilderParts.RadioEmiter.Radio;
 import Model.ConcreteModel.ConcreteMachine.BuilderParts.Torsos.Torso;
 
+import java.util.Arrays;
+
 public abstract class AbstractMachineBuilder extends Machine {
 
     protected int health;
     protected int attackPoints;
     protected int attackDistance;
     protected int moveSpan;
+    protected String[] buffer = new String[4];
     private Head head;
     private Leg leg;
     private Torso torso;
@@ -30,7 +33,7 @@ public abstract class AbstractMachineBuilder extends Machine {
         armors = new Armor[]{Armor.Neutral, Armor.Neutral, Armor.Neutral, Armor.Neutral};
     }
 
-    public AbstractMachineBuilder buildHead(Class<Head> head) {
+    public AbstractMachineBuilder addHead(Head head) {
 
         if (this.head != null) {
             this.health -= this.head.getHealth();
@@ -38,7 +41,9 @@ public abstract class AbstractMachineBuilder extends Machine {
             this.attackDistance -= this.head.getAttackDistance();
             this.moveSpan -= this.head.getMoveSpan();
         }
-        this.head = head.cast(head);
+
+        this.head = head;
+
 //
 //        this.health += head.getHealth();
 //        this.attackPoints += head.getAttackPoints();
@@ -49,11 +54,12 @@ public abstract class AbstractMachineBuilder extends Machine {
         this.attackPoints += this.head.getAttackPoints();
         this.attackDistance += this.head.getAttackDistance();
         this.moveSpan += this.head.getMoveSpan();
+        this.buffer[0] = this.head.getBuffer()[0];
         return this;
 
     }
 
-    public AbstractMachineBuilder buildLegs(Leg legs) {
+    public AbstractMachineBuilder addLegs(Leg legs) {
 
         if (this.leg != null) {
             this.health -= this.leg.getHealth();
@@ -67,11 +73,12 @@ public abstract class AbstractMachineBuilder extends Machine {
         attackPoints += legs.getAttackPoints();
         attackDistance += legs.getAttackDistance();
         moveSpan += legs.getMoveSpan();
+        this.buffer[1] = legs.getBuffer()[0];
         return this;
 
     }
 
-    public AbstractMachineBuilder buildTorso(Torso torso) {
+    public AbstractMachineBuilder addTorso(Torso torso) {
 
         if (this.torso != null) {
             this.health -= this.torso.getHealth();
@@ -85,11 +92,10 @@ public abstract class AbstractMachineBuilder extends Machine {
         attackPoints += torso.getAttackPoints();
         attackDistance += torso.getAttackDistance();
         moveSpan += torso.getMoveSpan();
+        this.buffer[2] = torso.getBuffer()[0];
         return this;
 
     }
-
-    public abstract AbstractMachineBuilder buildRadio(Radio radio) throws Exception;
 
     public void buildArmor(Plate plate, Armor armor) {
         this.armors[plate.getValue()] = armor;
@@ -115,6 +121,12 @@ public abstract class AbstractMachineBuilder extends Machine {
         return armors;
     }
 
+    public String[] getBuffer() {
+        return buffer;
+    }
+
     public abstract MachineSoldierEntity build();
+
+    public abstract AbstractMachineBuilder addRadio(Radio radio) throws Exception;
 
 }

@@ -14,7 +14,7 @@ public class SoldierMachine extends MachineSoldierEntity {
     public static class MachineBuilder extends AbstractMachineBuilder {
 
         @Override
-        public AbstractMachineBuilder buildRadio(Radio radio) throws Exception {
+        public AbstractMachineBuilder addRadio(Radio radio) throws Exception {
             throw new Exception("operation not supported");
         }
 
@@ -22,5 +22,6 @@ public class SoldierMachine extends MachineSoldierEntity {
         public SoldierMachine build() {
             return new SoldierMachine(this);
         }
+
     }
 }

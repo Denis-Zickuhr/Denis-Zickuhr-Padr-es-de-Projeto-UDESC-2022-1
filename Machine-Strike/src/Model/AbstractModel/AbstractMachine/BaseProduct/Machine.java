@@ -4,12 +4,12 @@ import Model.AbstractModel.Armor;
 
 public abstract class Machine {
 
-    private int health;
-    private int attackPoints;
-    private int attackDistance;
-    private int moveSpan;
-    private Armor[] armors = new Armor[4];
-    private String[] buffer;
+    protected int health;
+    protected int attackPoints;
+    protected int attackDistance;
+    protected int moveSpan;
+    protected Armor[] armors = new Armor[4];
+    protected String[] buffer;
 
     public String[] getBuffer() {
         return buffer;
