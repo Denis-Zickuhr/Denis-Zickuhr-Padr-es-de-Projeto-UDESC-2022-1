@@ -5,13 +5,11 @@ import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
 
 public interface MachineSelectionObserver {
 
-    void prevMachineClicked();
-    void nextMachineClicked();
-    void selMachineClicked();
-    void newMachineClicked();
-    void radMachineClicked();
     void drawMachine(Machine machine);
     void addPieceStrategy(AbstractStrategy st);
     AbstractStrategy getStrategy();
+    void enableComboBox(Boolean enabled);
+    void confirmSet(int current);
+    void dispose();
 
 }

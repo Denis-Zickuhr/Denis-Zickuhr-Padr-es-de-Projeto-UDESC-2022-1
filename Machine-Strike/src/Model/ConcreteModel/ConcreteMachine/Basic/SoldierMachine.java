@@ -2,7 +2,7 @@ package Model.ConcreteModel.ConcreteMachine.Basic;
 
 import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractMachineBuilder;
 import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.MachineSoldierEntity;
-import Model.ConcreteModel.ConcreteMachine.BuilderParts.RadioEmiter.Radio;
+import Model.ConcreteModel.ConcreteMachine.BuilderParts.Weapons.Weapon;
 
 public class SoldierMachine extends MachineSoldierEntity {
 
@@ -14,7 +14,7 @@ public class SoldierMachine extends MachineSoldierEntity {
     public static class MachineBuilder extends AbstractMachineBuilder {
 
         @Override
-        public AbstractMachineBuilder addRadio(Radio radio) throws Exception {
+        public AbstractMachineBuilder addRadio(Weapon weapon) throws Exception {
             throw new Exception("operation not supported");
         }
 

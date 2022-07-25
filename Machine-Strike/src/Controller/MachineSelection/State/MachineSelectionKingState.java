@@ -1,8 +1,8 @@
 package Controller.MachineSelection.State;
 
-import Controller.Factory.AbstractMachineFactory;
-import Controller.Factory.ConcreteMachineFactory;
-import Controller.Factory.ConcreteRadioactiveMachineFactory;
+import Controller.MachineSelection.Factory.AbstractMachineFactory;
+import Controller.MachineSelection.Factory.ConcreteMachineFactory;
+import Controller.MachineSelection.Factory.ConcreteArmedMachineFactory;
 import Controller.MachineSelection.MachineSelectionController;
 import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
 import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
@@ -32,7 +32,7 @@ public class MachineSelectionKingState extends MachineSelectionState {
     @Override
     public void changeFactory(boolean selected) {
         if(selected){
-            this.factory = new ConcreteRadioactiveMachineFactory();
+            this.factory = new ConcreteArmedMachineFactory();
         }else{
             this.factory = new ConcreteMachineFactory();
         }

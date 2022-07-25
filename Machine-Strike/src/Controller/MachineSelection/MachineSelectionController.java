@@ -1,11 +1,12 @@
 package Controller.MachineSelection;
 
-import Controller.Factory.AbstractMachineFactory;
+import Controller.BoardController.BoardController;
 import Controller.MachineSelection.State.MachineSelectionKingState;
+import Controller.MachineSelection.State.MachineSelectionSoldierState;
 import Controller.MachineSelection.State.MachineSelectionState;
 import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
-import Model.ConcreteModel.ConcreteMachine.ConcreteStrategy.BlackStrategy;
-import Model.ConcreteModel.ConcreteMachine.ConcreteStrategy.WhiteStrategy;
+import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
+import Model.ConcreteModel.ConcreteMachine.ConcreteStrategy.*;
 import View.MachineSelectionView;
 
 import java.util.ArrayList;
@@ -13,10 +14,28 @@ import java.util.List;
 
 public class MachineSelectionController{
 
-    private final List<MachineSelectionObserver> observer = new ArrayList<>();
-    private final List<AbstractMachineFactory> factories = new ArrayList<>();
-    private MachineSelectionState state = new MachineSelectionKingState(this);
+    BoardController boardController = new BoardController();
 
+    public MachineSelectionController() throws Exception {
+        new MachineSelectionView(this);
+        for (MachineSelectionObserver obs : observer) {
+            obs.drawMachine(state.selectMachine());
+            obs.enableComboBox(false);
+            for (AbstractStrategy s: getStrategies()
+            ) {
+                obs.addPieceStrategy(s);
+            }
+            getState().setStrategy(obs.getStrategy());
+        }
+    }
+
+    /*
+
+        State
+
+     */
+
+    private MachineSelectionState state = new MachineSelectionKingState(this);
     public MachineSelectionState getState() {
         return this.state;
     }
@@ -24,60 +43,83 @@ public class MachineSelectionController{
         this.state = state;
     }
 
+
+    /*
+
+        Observer
+
+     */
+
+    private final List<MachineSelectionObserver> observer = new ArrayList<>();
     public void attach(MachineSelectionObserver observer){
         this.observer.add(observer);
     }
-    public MachineSelectionController() throws Exception {
-        MachineSelectionView cl = new MachineSelectionView(this);
-        for (MachineSelectionObserver obs : observer) {
-            obs.drawMachine(state.selectMachine());
-            for (AbstractStrategy s: getStrategies()
-                 ) {
-                obs.addPieceStrategy(s);
-            }
-            getState().setStrategy(obs.getStrategy());
-        }
-    }
-
     public void prevMachine() throws Exception {
         state.prevMachine();
         for (MachineSelectionObserver obs : observer) {
             obs.drawMachine(state.selectMachine());
+            obs.enableComboBox(comboBoxVisible());
         }
     }
     public void nextMachine() throws Exception {
         state.nextMachine();
         for (MachineSelectionObserver obs : observer) {
             obs.drawMachine(state.selectMachine());
+            obs.enableComboBox(comboBoxVisible());
         }
     }
-    public void newMachine() throws Exception {
+    public void changeStrategy() throws Exception {
         for (MachineSelectionObserver obs : observer) {
-            obs.nextMachineClicked();
             getState().setStrategy(obs.getStrategy());
             obs.drawMachine(state.selectMachine());
         }
     }
     public void selectMachine() throws Exception {
-        System.out.println(state.selectMachine().getClass());
-        for (MachineSelectionObserver obs : observer) {
-            obs.nextMachineClicked();
-        }
-    }
-    public void toggleRadMachine(boolean selected) throws Exception {
-        state.changeFactory(selected);
+        boardController.addPiece(state.selectMachine());
     }
 
+    public void confirmePlayerSet(){
+        boardController.confirmSet();
+        if(boardController.gameRunning()){
+            for (MachineSelectionObserver obs: observer
+            ) {
+                obs.dispose();
+            }
+        }
+    }
+
+    public void toggleRadMachine(boolean selected) throws Exception {
+        state.changeFactory(selected);
+        for (MachineSelectionObserver obs : observer) {
+            obs.drawMachine(state.selectMachine());
+        }
+    }
+    public boolean comboBoxVisible(){
+        return getState().getClass() == MachineSelectionSoldierState.class;
+    }
+
+    /*
+
+    Strategies
+
+     */
+
     public static AbstractStrategy[] getStrategies(){
-        AbstractStrategy[] st = new AbstractStrategy[2];
+        AbstractStrategy[] st = new AbstractStrategy[10];
         st[0] = new BlackStrategy();
         st[1] = new WhiteStrategy();
+        st[2] = new RedStrategy();
+        st[3] = new BlueStrategy();
+        st[4] = new GreenStrategy();
+        st[5] = new CyanStrategy();
+        st[6] = new YellowStrategy();
+        st[7] = new MagentaStrategy();
+        st[8] = new PinkStrategy();
+        st[9] = new PhantomStrategy();
+
         return st;
     }
 
-    public static void main(String[] args) throws Exception {
-        MachineSelectionController msc = new MachineSelectionController();
-    }
 }
 
 

@@ -8,7 +8,6 @@ import View.Components.ImagePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
 public class MachineSelectionView extends JFrame implements MachineSelectionObserver {
 
@@ -17,6 +16,7 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
     String[] imageBuffer;
     String[] machineBuffer = {"Assets\\pieceSelectionBackGround.png"};
     ImagePanel piece;
+    JLabel machineData = new JLabel("init");
     MachineSelectionController controller;
 
     @Override
@@ -31,6 +31,11 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
         }catch(Exception e){
             return null;
         }
+    }
+
+    @Override
+    public void enableComboBox(Boolean enable) {
+        jb_new.setEnabled(enable);
     }
 
     /**
@@ -51,8 +56,10 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
         this.controller = controller;
         this.controller.attach(this);
 
+        setTitle("Seleção de peças, Jogador 1");
+
         jp_cp = new JPanel(new BorderLayout());
-        jp_cp.setBackground(Color.blue);
+        jp_cp.setBackground(Color.white);
         initButtons();
         setSize(new Dimension(1000,550));
 
@@ -60,6 +67,7 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
         jp_cp.add(piece , BorderLayout.CENTER);
         imageBuffer = new String[]{"Assets\\pieceCard.png"};
         jp_cp.add((new ImagePanel(imageBuffer, new Dimension(500,500))), BorderLayout.EAST);
+        jp_cp.add(machineData, BorderLayout.NORTH);
 
         this.add(jp_cp);
         setVisible(true);
@@ -74,7 +82,8 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
         JButton jb_next = new JButton("Peça Seguinte");
         jb_new = new JComboBox();
         JButton jb_sel = new JButton("Selecionar");
-        JRadioButton jrb_radio = new JRadioButton("Versão Radioativa");
+        JRadioButton jrb_radio = new JRadioButton("Versão Armada");
+        JButton jb_conf = new JButton("Confirma Set");
 
         jb_prev.addActionListener(evt -> {
             try {
@@ -92,7 +101,7 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
         });
         jb_new.addActionListener(evt -> {
             try {
-                controller.newMachine();
+                controller.changeStrategy();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -111,38 +120,27 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
                 e.printStackTrace();
             }
         });
+        jb_conf.addActionListener(evt -> {
+            try {
+                controller.confirmePlayerSet();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 
         jp_buttons.add(jb_prev);
         jp_buttons.add(jb_next);
         jp_buttons.add(jb_new);
         jp_buttons.add(jb_sel);
         jp_buttons.add(jrb_radio);
+        jp_buttons.add(jb_conf);
 
         jp_cp.add(jp_buttons, BorderLayout.SOUTH);
     }
 
     @Override
-    public void prevMachineClicked() {
-
-    }
-
-    @Override
-    public void nextMachineClicked() {
-
-    }
-
-    @Override
-    public void selMachineClicked() {
-
-    }
-
-    @Override
-    public void newMachineClicked() {
-
-    }
-
-    @Override
-    public void radMachineClicked() {
+    public void confirmSet(int current) {
+        setTitle("Seleção de peças, Jogador 2");
 
     }
 
@@ -150,12 +148,14 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
     public void drawMachine(Machine machine){
         try {
             String[] newBuffer = rebuff(this.machineBuffer, machine.getBuffer());
+            machineData.setText(machine.toString());
             jp_cp.remove(piece);
             piece = new ImagePanel(newBuffer, new Dimension(500, 500));
             jp_cp.add(piece, BorderLayout.CENTER);
             jp_cp.updateUI();
         }catch(Exception e){
             String[] newBuffer = rebuff(this.machineBuffer, new String[]{"Assets\\nopiece.png"});
+            machineData.setText("Máquina indisponível");
             jp_cp.remove(piece);
             piece = new ImagePanel(newBuffer, new Dimension(500, 500));
             jp_cp.add(piece, BorderLayout.CENTER);

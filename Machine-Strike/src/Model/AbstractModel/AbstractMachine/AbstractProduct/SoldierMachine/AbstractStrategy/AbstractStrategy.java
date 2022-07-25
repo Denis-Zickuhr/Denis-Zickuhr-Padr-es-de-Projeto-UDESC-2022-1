@@ -17,6 +17,6 @@ public abstract class AbstractStrategy {
 
     public abstract MachineSoldierEntity build();
 
-    public abstract MachineSoldierEntity buildRadio();
+    public abstract MachineSoldierEntity buildRadio() throws Exception;
 
 }

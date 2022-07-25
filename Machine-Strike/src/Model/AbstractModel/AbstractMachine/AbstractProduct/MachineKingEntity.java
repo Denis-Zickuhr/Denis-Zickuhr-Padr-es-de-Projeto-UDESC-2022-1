@@ -6,7 +6,6 @@ import Model.AbstractModel.Armor;
 public abstract class MachineKingEntity extends Machine {
 
     public MachineKingEntity() {
-        setBuffer(new String[]{"Assets\\Piece2B.png"});
         setHealth(2);
         setAttackPoints(10);
         setAttackDistance(1);

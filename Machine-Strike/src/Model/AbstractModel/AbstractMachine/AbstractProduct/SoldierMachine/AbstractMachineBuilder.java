@@ -5,10 +5,8 @@ import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
 import Model.AbstractModel.Plate;
 import Model.ConcreteModel.ConcreteMachine.BuilderParts.Heads.Head;
 import Model.ConcreteModel.ConcreteMachine.BuilderParts.Legs.Leg;
-import Model.ConcreteModel.ConcreteMachine.BuilderParts.RadioEmiter.Radio;
+import Model.ConcreteModel.ConcreteMachine.BuilderParts.Weapons.Weapon;
 import Model.ConcreteModel.ConcreteMachine.BuilderParts.Torsos.Torso;
-
-import java.util.Arrays;
 
 public abstract class AbstractMachineBuilder extends Machine {
 
@@ -127,6 +125,6 @@ public abstract class AbstractMachineBuilder extends Machine {
 
     public abstract MachineSoldierEntity build();
 
-    public abstract AbstractMachineBuilder addRadio(Radio radio) throws Exception;
+    public abstract AbstractMachineBuilder addRadio(Weapon weapon) throws Exception;
 
 }
