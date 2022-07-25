@@ -3,17 +3,25 @@ package View;
 import Controller.BoardController.BoardController;
 import Controller.BoardController.BoardObserver;
 import Controller.MachineSelection.MachineSelectionController;
+import Model.BoardEntity;
+import Model.ConcreteModel.ConcreteMachine.Armed.KingArmedMachine;
+import Model.ConcreteModel.ConcreteMachine.ConcreteStrategy.BlackStrategy;
+import Model.Terrain.Terrain;
 import View.Components.ImagePanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BoardView extends JFrame implements BoardObserver {
     private JPanel jp_contentPane;
     private JPanel jp_grid;
     private BoardController controller;
 
-    public BoardView(BoardController controller) {
+    public BoardView(BoardController controller) throws Exception {
 
         this.controller = controller;
         this.controller.attach(this);
@@ -29,18 +37,29 @@ public class BoardView extends JFrame implements BoardObserver {
         loadScreen();
     }
 
-    private void loadGrid(){
+    private void loadGrid() throws Exception {
         jp_grid = new JPanel(new GridLayout(8,8,2,2));
         jp_grid.setBackground(Color.black);
         jp_contentPane.add(BorderLayout.CENTER,jp_grid);
-        String[] imagens = {"Assets\\Terrain.png", "Assets\\Piece1.png"};
+    }
+
+    public void draw(ArrayList<Terrain> board){
+        this.setVisible(true);
         for (int i = 0; i < 64; i++) {
-            jp_grid.add(new ImagePanel(imagens));
+            ImagePanel piece = new ImagePanel(board.get(i).getDraw());
+            int finalI = i;
+            piece.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e){
+                    System.out.println(Arrays.toString((Integer.toString(finalI, 8) + "").split("")));
+                }
+            }
+            );
+            jp_grid.add(piece);
         }
     }
 
-    private void loadScreen(){
+    private void loadScreen() throws Exception {
         loadGrid();
     }
-
 }

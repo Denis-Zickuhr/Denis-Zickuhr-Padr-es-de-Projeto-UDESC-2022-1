@@ -1,6 +1,7 @@
 package Model.AbstractModel.AbstractMachine.BaseProduct;
 
 import Model.AbstractModel.Armor;
+import Model.Terrain.Adapter.MovementBehaviourAdapter;
 
 import java.util.Arrays;
 
@@ -10,8 +11,26 @@ public abstract class Machine {
     protected int attackPoints;
     protected int attackDistance;
     protected int moveSpan;
+    protected int[] cords;
     protected Armor[] armors = new Armor[4];
     protected String[] buffer;
+    protected MovementBehaviourAdapter movement;
+
+    public int[] getCords() {
+        return cords;
+    }
+
+    public void setCords(int[] cords) {
+        this.cords = cords;
+    }
+
+    public MovementBehaviourAdapter getMovement() {
+        return movement;
+    }
+
+    public void setMovement(MovementBehaviourAdapter movement) {
+        this.movement = movement;
+    }
 
     /**
      * Returns a string representation of the object.

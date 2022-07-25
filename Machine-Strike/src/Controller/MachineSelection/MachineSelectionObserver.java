@@ -9,7 +9,7 @@ public interface MachineSelectionObserver {
     void addPieceStrategy(AbstractStrategy st);
     AbstractStrategy getStrategy();
     void enableComboBox(Boolean enabled);
-    void confirmSet(int current);
+    void alterTittle();
     void dispose();
 
 }

@@ -2,6 +2,9 @@ package Controller.BoardController;
 
 import Controller.MachineSelection.MachineSelectionObserver;
 import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
+import Model.BaseEntity;
+import Model.BoardEntity;
+import Model.Terrain.Terrain;
 import View.BoardView;
 
 import java.util.ArrayList;
@@ -12,6 +15,7 @@ public class BoardController{
      * Constructs a new object.
      */
     public BoardController() {
+        board = new BoardEntity();
     }
 
     private final List<BoardObserver> observer = new ArrayList<>();
@@ -19,45 +23,38 @@ public class BoardController{
         this.observer.add(observer);
     }
 
-    private List<Machine> pieceSetAlpha;
-    private List<Machine> pieceSetBeta;
-    private final List<Machine> temporaryPieceSet = new ArrayList<>();
+    BoardEntity board;
     private boolean ready = false;
     private boolean running = false;
 
-    public List<Machine> getPieceSetAlpha() {
-        return pieceSetAlpha;
-    }
-    public List<Machine> getPieceSetBeta() {
-        return pieceSetBeta;
-    }
-
     public void addPiece(Machine machine){
-        temporaryPieceSet.add(machine);
+        board.AddToTemporaryPieceSet(machine);
     }
 
-    public void confirmSet(){
+    public void confirmSet() throws Exception {
         if(ready){
             startGame();
         }else {
-            pieceSetAlpha = new ArrayList<>(temporaryPieceSet);
-            temporaryPieceSet.clear();
+            board.setPieceSetAlpha(new ArrayList<>(board.getTemporaryPieceSet()));
+            board.clearTemporaryPieceSet();
             ready = true;
         }
     }
 
-    public void startGame(){
-        pieceSetBeta = new ArrayList<>(temporaryPieceSet);
-        temporaryPieceSet.clear();
-        new BoardView(this).setVisible(true);
+    public void startGame() throws Exception {
+        board.setPieceSetBeta(new ArrayList<>(board.getTemporaryPieceSet()));
+        board.clearTemporaryPieceSet();
+        board.build();
+        new BoardView(this);
+        for (BoardObserver obs: observer
+             ) {
+            obs.draw(board.getTerrains());
+        }
         running = true;
-        System.out.println(pieceSetAlpha.toString());
-        System.out.println(pieceSetBeta.toString());
     }
 
     public boolean gameRunning(){
         return running;
     }
-
 
 }

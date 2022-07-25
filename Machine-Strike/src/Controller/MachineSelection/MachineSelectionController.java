@@ -5,7 +5,6 @@ import Controller.MachineSelection.State.MachineSelectionKingState;
 import Controller.MachineSelection.State.MachineSelectionSoldierState;
 import Controller.MachineSelection.State.MachineSelectionState;
 import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
-import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
 import Model.ConcreteModel.ConcreteMachine.ConcreteStrategy.*;
 import View.MachineSelectionView;
 
@@ -78,7 +77,7 @@ public class MachineSelectionController{
         boardController.addPiece(state.selectMachine());
     }
 
-    public void confirmePlayerSet(){
+    public void confirmePlayerSet() throws Exception {
         boardController.confirmSet();
         if(boardController.gameRunning()){
             for (MachineSelectionObserver obs: observer

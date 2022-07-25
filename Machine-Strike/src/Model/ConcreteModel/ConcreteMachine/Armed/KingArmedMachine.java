@@ -16,6 +16,6 @@ public class KingArmedMachine extends MachineKingEntity {
 
     public KingArmedMachine() {
         super();
-        setBuffer(new String[]{"Assets\\kingarmed.png"});
+        setBuffer(new String[]{"Assets\\#kingarmed.png"});
     }
 }

@@ -139,9 +139,8 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
     }
 
     @Override
-    public void confirmSet(int current) {
+    public void alterTittle() {
         setTitle("Seleção de peças, Jogador 2");
-
     }
 
     @Override
