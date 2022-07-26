@@ -67,6 +67,27 @@ public class ImagePanel extends JPanel{
         }
     }
 
+    public void setBuffer(String[] paths){
+        images = new BufferedImage[paths.length];
+        int i = 0;
+        try {
+            for (String s: paths
+            ) {
+                if(s != null){
+                    BufferedImage bufferedImage = ImageIO.read(new File(paths[i]));
+                    images[i] = bufferedImage;
+                }
+                i++;
+            }
+        } catch (IOException e) {
+            System.out.println("javax.imageio.IIOException: Can't read input at file "+i+"!");
+        }
+    }
+
+    public BufferedImage[] getImages() {
+        return images;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

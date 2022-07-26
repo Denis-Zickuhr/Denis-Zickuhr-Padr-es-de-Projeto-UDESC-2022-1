@@ -1,25 +1,45 @@
 package Model.Terrain;
 
+import Controller.BoardController.Visitor.MachineVisitor;
 import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
-import Model.BoardEntity;
 import Model.ConcreteModel.ConcreteMachine.Basic.SoldierMachine;
-import Model.Terrain.Adapter.MovementBehaviourAdapter;
-
-import java.util.Arrays;
 
 public class Terrain {
 
     private final TerrainType terrainType;
-    private final BoardEntity board;
-    public Terrain(TerrainType terrainType, BoardEntity board) {
+    private final int[] cords;
+
+    public Terrain(TerrainType terrainType, int[] cords) {
         this.terrainType = terrainType;
-        this.board = board;
+        this.cords = cords;
     }
 
     private Machine machine;
 
+    public int[] getCords() {
+        return cords;
+    }
+
     public TerrainType getTerrainType() {
         return terrainType;
+    }
+
+    public Machine getMachine() {
+        return machine;
+    }
+
+    public void addMachine(Machine machine){
+        if(this.machine == null){
+            this.machine = machine;
+        }
+    }
+
+    public void removeMachine(){
+        this.machine = null;
+    }
+
+    public void accept(MachineVisitor visitor) throws Exception {
+        visitor.visit(this);
     }
 
     public String[] getDraw() {
@@ -38,48 +58,6 @@ public class Terrain {
             return buffer;
         }
         return new String[]{terrainType.buffer()};
-    }
-
-    public Machine getMachine() {
-        return machine;
-    }
-
-    public boolean receivePiece(Machine machine){
-        if(this.machine == null){
-            this.machine = machine;
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-    public void dropPiece(){
-        this.machine = null;
-    }
-
-    public boolean movePiece(int[] cords) throws Exception {
-        if (board.getTerrain(cords).getMachine() == null){
-            Machine tempMachine = this.machine;
-            this.machine = null;
-            board.getTerrain(cords).receivePiece(tempMachine);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean attackMachine(Machine machine){
-        int damage = getMachine().getAttackPoints() + terrainType.value();
-        machine.setHealth(machine.getHealth() - damage);
-        return true;
-    }
-
-    public boolean overCharge(){
-        return true;
-    }
-
-    public boolean specialAttack() throws Exception {
-        getMachine().getMovement().specialAttack();
-        return false;
     }
 
 }
