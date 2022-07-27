@@ -1,6 +1,6 @@
 package Model.AbstractModel.AbstractMachine.AbstractProduct;
 
-import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
+import Model.AbstractModel.AbstractMachine.Machine;
 import Model.AbstractModel.Armor;
 import Model.Terrain.Adapter.MovementAdapterQueen;
 

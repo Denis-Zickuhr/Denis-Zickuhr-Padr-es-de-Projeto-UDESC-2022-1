@@ -4,6 +4,6 @@ import Model.Terrain.Terrain;
 
 public interface MachineVisitor {
 
-    void visit(Terrain terrain);
+    void visit(Terrain terrain) throws Exception;
 
 }

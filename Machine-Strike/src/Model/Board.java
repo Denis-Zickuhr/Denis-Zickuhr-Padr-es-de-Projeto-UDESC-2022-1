@@ -1,14 +1,39 @@
 package Model;
 
 import Controller.BoardController.Visitor.MachineVisitor;
-import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
+import Model.AbstractModel.AbstractMachine.Machine;
 import Model.Terrain.Terrain;
 import Model.Terrain.TerrainType;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class Board {
+
+    private static Player player1;
+    private static Player player2;
+
+    public static Player getPlayer1() {
+        if(player1 == null)
+            player1 = new Player();
+        return player1;
+    }
+
+    public static Player getPlayer2() {
+        if(player2 == null)
+            player2 = new Player();
+        return player2;
+    }
+
+    public void addPlayerMachine(boolean player1Ready, Machine machine){
+        if(!player1Ready){
+            Board.getPlayer1().addMachine(machine);
+        }else{
+            Board.getPlayer2().addMachine(machine);
+        }
+    }
 
     public Board() {
         for (int i = 0; i < 64; i++) {
@@ -17,7 +42,7 @@ public class Board {
     }
 
     private int[] decimalToCord(int key){
-        String[] temp = (Integer.toString(key, 8) + "").split("");
+        String[] temp = (Integer.toString(key, 8) + "").split("").clone();
         int[] cords;
         if (temp.length == 1){
             cords = new int[]{0, Integer.parseInt(temp[0])};
@@ -31,22 +56,6 @@ public class Board {
         for (Terrain terrain: terrains)
             terrain.accept(visitor);
     }
-
-    private List<Machine> pieceSetAlpha;
-    private List<Machine> pieceSetBeta;
-
-    public List<Machine> getPieceSetAlpha() {
-        return pieceSetAlpha;
-    }
-    public List<Machine> getPieceSetBeta() {
-        return pieceSetBeta;
-    }
-
-
-    public List<Machine> getTemporaryPieceSet() {
-        return temporaryPieceSet;
-    }
-    private final List<Machine> temporaryPieceSet = new ArrayList<>();
 
     private final List<Terrain> terrains = new ArrayList<>(64);
 
@@ -67,39 +76,26 @@ public class Board {
         throw new Exception("Index out of bounds Exception at Board.getTerrain()");
     }
 
-    public void setPieceSetAlpha(List<Machine> pieceSetAlpha) {
-        this.pieceSetAlpha = pieceSetAlpha;
-    }
+    public void assembleBoard() {
 
-    public void setPieceSetBeta(List<Machine> pieceSetBeta) {
-        this.pieceSetBeta = pieceSetBeta;
-    }
-
-    public void clearTemporaryPieceSet() {
-        this.temporaryPieceSet.clear();
-    }
-
-    public void AddToTemporaryPieceSet(Machine machine){
-        this.temporaryPieceSet.add(machine);
-    }
-
-    public void assembleBoard(){
-
-        for (int i = 0; i < 32; i++) {
-            if(i == pieceSetAlpha.size())
-                break;
-            Machine machine = pieceSetAlpha.get(i);
-            terrains.get(i).addMachine(machine);
-        }
-        int aux = 63;
-        for (int i = 32; i < 64; i++) {
-            if(i-32 == pieceSetBeta.size())
-                break;
-            Machine machine = pieceSetBeta.get(i-32);
-            terrains.get(aux).addMachine(machine);
-            aux--;
+        Random r = new Random();
+        for (Machine machine : Board.getPlayer1().getMachines()
+        ) {
+            int number = r.nextInt(31);
+            while (terrains.get(number).getMachine() != null) {
+                number = r.nextInt(31);
+            }
+            terrains.get(number).addMachine(machine);
         }
 
+        for (Machine machine : Board.getPlayer2().getMachines()
+        ) {
+            int number = r.nextInt(31) + 32;
+            while (terrains.get(number).getMachine() != null) {
+                number = r.nextInt(31);
+            }
+            terrains.get(number).addMachine(machine);
+        }
     }
 
 }

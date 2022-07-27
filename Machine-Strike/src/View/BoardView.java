@@ -2,6 +2,7 @@ package View;
 
 import Controller.BoardController.BoardController;
 import Controller.BoardController.BoardObserver;
+import Controller.BoardController.Command.Commands.Attack;
 import Controller.BoardController.Command.Commands.Move;
 import Model.Terrain.Terrain;
 import View.Components.ImagePanel;
@@ -13,19 +14,17 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class BoardView extends JFrame implements BoardObserver {
-    private final JPanel jp_contentPane;
+    private final JPanel jp_contentPane = new JPanel();;
     private JPanel jp_grid;
-    public static JPanel jp_buttonsSouth;
-    public static JPanel jp_buttonsNorth;
-    private final BoardController controller;
+    public static JPanel player1Input;
+    public static JPanel player2Input;
 
-    public BoardView(BoardController controller) throws Exception {
+    public BoardView() throws Exception {
 
-        this.controller = controller;
-        this.controller.attach(this);
+        BoardController controller = BoardController.getInstance();
+        controller.attach(this);
 
-        jp_contentPane = new JPanel();
-        jp_contentPane.setBackground(Color.black);
+        setBackground(Color.black);
         setSize(new Dimension(800,800));
         BorderLayout layout = new BorderLayout();
         jp_contentPane.setLayout(layout);
@@ -41,11 +40,11 @@ public class BoardView extends JFrame implements BoardObserver {
         jp_contentPane.add(BorderLayout.CENTER,jp_grid);
     }
 
-    public void draw(ArrayList<Terrain> board){
+    public void draw(ArrayList<Terrain> terrains){
         this.setVisible(true);
-        for (int key = 0; key < board.size(); key++) {
+        for (int key = 0; key < terrains.size(); key++) {
             JPanel panel = new JPanel(new BorderLayout());
-            ImagePanel terrain = new ImagePanel(board.get(key).getDraw());
+            ImagePanel terrain = new ImagePanel(terrains.get(key).getDraw());
             //panel.add(terrain, BorderLayout.CENTER, 0);
             int finalKey = key;
             terrain.addMouseListener(new MouseAdapter() {
@@ -61,7 +60,7 @@ public class BoardView extends JFrame implements BoardObserver {
                         cords = new int[]{Integer.parseInt(temp[0]), Integer.parseInt(temp[1])};
                     }
                     try {
-                        controller.terrainClicked(cords);
+                        BoardController.getInstance().terrainClicked(cords);
                     } catch (Exception ignored) {
                     }
                 }
@@ -70,13 +69,12 @@ public class BoardView extends JFrame implements BoardObserver {
         }
     }
 
-    public void redraw(ArrayList<Terrain> board){
+    public void redraw(ArrayList<Terrain> terrains){
         int index = 0;
         for (Component component: jp_grid.getComponents()
         ) {
-            //JPanel father = (JPanel) component;
             ImagePanel panel = (ImagePanel) component;
-            panel.setBuffer(board.get(index).getDraw());
+            panel.setBuffer(terrains.get(index).getDraw());
             index++;
         }
         this.repaint();
@@ -91,20 +89,20 @@ public class BoardView extends JFrame implements BoardObserver {
 
         // Define a cor e as ações do jogador 1
 
-        jp_buttonsSouth = new JPanel();
-        jp_buttonsSouth.setBackground(Color.BLUE);
+        player1Input = new JPanel();
+        player1Input.setBackground(Color.BLUE);
 
-        buildActions(jp_buttonsSouth);
-        jp_contentPane.add(BorderLayout.SOUTH,jp_buttonsSouth);
+        buildActions(player1Input);
+        jp_contentPane.add(BorderLayout.SOUTH, player1Input);
 
         // Define a cor e as ações do jogador 2
 
-        jp_buttonsNorth = new JPanel();
-        jp_buttonsNorth.setBackground(Color.RED);
+        player2Input = new JPanel();
+        player2Input.setBackground(Color.RED);
 
-        buildActions(jp_buttonsNorth);
+        buildActions(player2Input);
 
-        jp_contentPane.add(BorderLayout.NORTH,jp_buttonsNorth);
+        jp_contentPane.add(BorderLayout.NORTH, player2Input);
     }
 
     private void buildActions(JPanel jp_buttons) {
@@ -123,13 +121,13 @@ public class BoardView extends JFrame implements BoardObserver {
         jp_buttons.getComponent(Action.MOVE.getIndex()).addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e){
-                controller.add(new Move(controller));
+                BoardController.getInstance().add(new Move());
             }
         });
         jp_buttons.getComponent(Action.ATTACK.getIndex()).addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e){
-
+                BoardController.getInstance().add(new Attack());
             }
         });
         jp_buttons.getComponent(Action.OVERCHARGE.getIndex()).addMouseListener(new MouseAdapter() {
@@ -153,7 +151,7 @@ public class BoardView extends JFrame implements BoardObserver {
         jp_buttons.getComponent(Action.CANCEL.getIndex()).addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e){
-                controller.releasePiece();
+                BoardController.getInstance().releasePiece();
                 toggleAllButtons(jp_buttons, false);
             }
         });

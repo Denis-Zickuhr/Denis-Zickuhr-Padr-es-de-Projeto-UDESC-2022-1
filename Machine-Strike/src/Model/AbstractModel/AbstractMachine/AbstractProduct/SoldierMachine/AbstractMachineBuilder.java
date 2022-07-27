@@ -1,7 +1,7 @@
 package Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine;
 
 import Model.AbstractModel.Armor;
-import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
+import Model.AbstractModel.AbstractMachine.Machine;
 import Model.AbstractModel.Plate;
 import Model.ConcreteModel.ConcreteMachine.BuilderParts.Heads.Head;
 import Model.ConcreteModel.ConcreteMachine.BuilderParts.Legs.Leg;

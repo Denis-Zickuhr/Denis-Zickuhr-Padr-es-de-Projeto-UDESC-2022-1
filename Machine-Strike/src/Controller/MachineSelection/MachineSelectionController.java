@@ -13,10 +13,7 @@ import java.util.List;
 
 public class MachineSelectionController{
 
-    BoardController boardController = new BoardController();
-
-    public MachineSelectionController() throws Exception {
-        new MachineSelectionView(this);
+    public void init() throws Exception {
         for (MachineSelectionObserver obs : observer) {
             obs.drawMachine(state.selectMachine());
             obs.enableComboBox(false);
@@ -74,12 +71,12 @@ public class MachineSelectionController{
         }
     }
     public void selectMachine() throws Exception {
-        boardController.addPiece(state.selectMachine());
+        BoardController.getInstance().addPiece(state.selectMachine());
     }
 
     public void confirmePlayerSet() throws Exception {
-        boardController.confirmSet();
-        if(boardController.gameRunning()){
+        BoardController.getInstance().confirmSet();
+        if(BoardController.getInstance().gameRunning()){
             for (MachineSelectionObserver obs: observer
             ) {
                 obs.dispose();
@@ -102,6 +99,15 @@ public class MachineSelectionController{
     Strategies
 
      */
+
+    private static MachineSelectionController instance;
+
+    public static MachineSelectionController getInstance() throws Exception {
+        if (instance == null){
+            instance = new MachineSelectionController();
+        }
+        return instance;
+    }
 
     public static AbstractStrategy[] getStrategies(){
         AbstractStrategy[] st = new AbstractStrategy[10];

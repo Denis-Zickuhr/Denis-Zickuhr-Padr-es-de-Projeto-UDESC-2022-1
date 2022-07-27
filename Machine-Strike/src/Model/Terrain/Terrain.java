@@ -1,7 +1,7 @@
 package Model.Terrain;
 
 import Controller.BoardController.Visitor.MachineVisitor;
-import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
+import Model.AbstractModel.AbstractMachine.Machine;
 import Model.ConcreteModel.ConcreteMachine.Basic.SoldierMachine;
 
 public class Terrain {

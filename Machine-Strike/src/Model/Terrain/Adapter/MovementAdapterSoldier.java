@@ -1,7 +1,6 @@
 package Model.Terrain.Adapter;
 
-import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.MachineSoldierEntity;
-import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
+import Model.AbstractModel.AbstractMachine.Machine;
 
 public class MovementAdapterSoldier implements MovementBehaviourAdapter {
 

@@ -1,21 +1,30 @@
 package Controller.BoardController;
 
 import Controller.BoardController.Command.CommandInvoker;
-import Controller.BoardController.Command.Commando;
 import Controller.BoardController.State.BoardControllerState;
 import Controller.BoardController.State.BoardControllerWaitingPieceState;
-import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
+import Controller.BoardController.Visitor.ApplyOvechargeMachineVisitor;
+import Controller.BoardController.Visitor.ApplyTerrainEffectMachineVisitor;
+import Controller.BoardController.Visitor.UnalteredMachineVisitor;
+import Model.AbstractModel.AbstractMachine.Machine;
 import Model.Board;
+import Model.Player;
 import Model.Terrain.Terrain;
 import View.Action;
 import View.BoardView;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BoardController extends CommandInvoker{
 
+    private static BoardController instance;
+    public static BoardController getInstance(){
+        if(instance == null){
+            instance = new BoardController();
+        }
+        return instance;
+    }
 
     /**
      * Constructs a new object.
@@ -31,9 +40,13 @@ public class BoardController extends CommandInvoker{
 
     Board board;
     Terrain terrain;
-    private boolean ready = false;
+    private boolean player1Ready = false;
     private boolean running = false;
     private BoardControllerState state = new BoardControllerWaitingPieceState(this);
+    private final ApplyTerrainEffectMachineVisitor applyTerrainEffectMachineVisitor = new ApplyTerrainEffectMachineVisitor();
+    private final UnalteredMachineVisitor unalteredMachineVisitor = new UnalteredMachineVisitor();
+    private final ApplyOvechargeMachineVisitor applyOvechargeMachineVisitor = new ApplyOvechargeMachineVisitor();
+
 
     public void setTerrain(Terrain terrain) {
         this.terrain = terrain;
@@ -48,24 +61,20 @@ public class BoardController extends CommandInvoker{
     }
 
     public void addPiece(Machine machine){
-        board.AddToTemporaryPieceSet(machine);
+        board.addPlayerMachine(player1Ready, machine);
     }
 
     public void confirmSet() throws Exception {
-        if(ready){
+        if(player1Ready){
             startGame();
         }else {
-            board.setPieceSetAlpha(new ArrayList<>(board.getTemporaryPieceSet()));
-            board.clearTemporaryPieceSet();
-            ready = true;
+            player1Ready = true;
         }
     }
 
     public void startGame() throws Exception {
-        board.setPieceSetBeta(new ArrayList<>(board.getTemporaryPieceSet()));
-        board.clearTemporaryPieceSet();
         board.assembleBoard();
-        new BoardView(this);
+        new BoardView();
         for (BoardObserver obs: observer
              ) {
             obs.draw(board.getTerrains());
@@ -98,7 +107,6 @@ public class BoardController extends CommandInvoker{
     }
 
     public void swapPiece(int[] cordsOrigin, int[] cordsDestiny) throws Exception {
-        System.out.println("tentei trocar");
         if (board.getTerrain(cordsDestiny).getMachine() == null){
             Machine tempMachine = board.getTerrain(cordsOrigin).getMachine();
             getTerrain().removeMachine();
@@ -107,13 +115,22 @@ public class BoardController extends CommandInvoker{
         redraw();
     }
 
-    public boolean attackMachine(Machine machine){
-        int damage = getTerrain().getMachine().getAttackPoints() + getTerrain().getTerrainType().value();
-        machine.setHealth(machine.getHealth() - damage);
-        return true;
+    public void attackMachine(int[] attacker, int[] defender, int vertex) throws Exception {
+        board.getTerrain(attacker).accept(applyTerrainEffectMachineVisitor);
+        board.getTerrain(defender).accept(unalteredMachineVisitor);
+        System.out.println(applyTerrainEffectMachineVisitor.getMachine().getHealth());
+        System.out.println(unalteredMachineVisitor.getMachine().getHealth());
+        System.out.println(Board.getPlayer1().getMachines().toString());
+        int damage = applyTerrainEffectMachineVisitor.getMachine().getAttackPoints() * vertex;
+        board.getTerrain(defender).getMachine().setHealth(unalteredMachineVisitor.getMachine().getHealth() - damage);
+        System.out.println(applyTerrainEffectMachineVisitor.getMachine().getHealth());
+        System.out.println(board.getTerrain(defender).getMachine().getHealth());
+        System.out.println(Board.getPlayer1().getMachines().toString());
     }
 
-    public boolean overCharge(){
+    public boolean overCharge(int[] attacker) throws Exception {
+        board.getTerrain(attacker).accept(applyOvechargeMachineVisitor);
+        applyTerrainEffectMachineVisitor.getMachine();
         return true;
     }
 
@@ -125,7 +142,8 @@ public class BoardController extends CommandInvoker{
     public void toggleButton(){
         for (BoardObserver obs: observer
              ) {
-             obs.toggleAction(BoardView.jp_buttonsNorth, true, Action.MOVE);
+             obs.toggleAction(BoardView.player2Input, true, Action.ATTACK);
+            obs.toggleAction(BoardView.player2Input, true, Action.MOVE);
         }
     }
 

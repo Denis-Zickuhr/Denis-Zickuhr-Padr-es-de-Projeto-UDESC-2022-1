@@ -1,7 +1,7 @@
 package Model.Terrain.Adapter;
 
 import Model.AbstractModel.AbstractMachine.AbstractProduct.MachineQueenEntity;
-import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
+import Model.AbstractModel.AbstractMachine.Machine;
 
 public class MovementAdapterQueen implements MovementBehaviourAdapter {
 

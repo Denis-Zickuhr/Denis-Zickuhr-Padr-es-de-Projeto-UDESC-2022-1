@@ -3,7 +3,7 @@ package View;
 import Controller.MachineSelection.MachineSelectionController;
 import Controller.MachineSelection.MachineSelectionObserver;
 import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
-import Model.AbstractModel.AbstractMachine.BaseProduct.Machine;
+import Model.AbstractModel.AbstractMachine.Machine;
 import View.Components.ImagePanel;
 
 import javax.swing.*;
@@ -17,7 +17,6 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
     String[] machineBuffer = {"Assets\\pieceSelectionBackGround.png"};
     ImagePanel piece;
     JLabel machineData = new JLabel("init");
-    MachineSelectionController controller;
 
     @Override
     public void addPieceStrategy(AbstractStrategy st){
@@ -38,39 +37,26 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
         jb_new.setEnabled(enable);
     }
 
-    /**
-     * Constructs a new frame that is initially invisible.
-     * <p>
-     * This constructor sets the component's locale property to the value
-     * returned by <code>JComponent.getDefaultLocale</code>.
-     *
-     * @throws HeadlessException if GraphicsEnvironment.isHeadless()
-     *                           returns true.
-     * @see GraphicsEnvironment#isHeadless
-     * @see Component#setSize
-     * @see Component#setVisible
-     * @see JComponent#getDefaultLocale
-     */
-    public MachineSelectionView(MachineSelectionController controller) throws HeadlessException {
+    public MachineSelectionView() throws Exception {
 
-        this.controller = controller;
-        this.controller.attach(this);
+        MachineSelectionController controller = MachineSelectionController.getInstance();
+        controller.attach(this);
 
         setTitle("Seleção de peças, Jogador 1");
 
         jp_cp = new JPanel(new BorderLayout());
         jp_cp.setBackground(Color.white);
         initButtons();
-        setSize(new Dimension(1000,550));
+        setSize(new Dimension(500,550));
 
         piece = new ImagePanel(machineBuffer, new Dimension(500,500));
         jp_cp.add(piece , BorderLayout.CENTER);
-        imageBuffer = new String[]{"Assets\\pieceCard.png"};
-        jp_cp.add((new ImagePanel(imageBuffer, new Dimension(500,500))), BorderLayout.EAST);
         jp_cp.add(machineData, BorderLayout.NORTH);
 
         this.add(jp_cp);
         setVisible(true);
+
+        MachineSelectionController.getInstance().init();
     }
 
     public void initButtons(){
@@ -78,51 +64,52 @@ public class MachineSelectionView extends JFrame implements MachineSelectionObse
         JPanel jp_buttons = new JPanel();
         jp_buttons.setBackground(Color.black);
 
-        JButton jb_prev = new JButton("Peça Anterior");
-        JButton jb_next = new JButton("Peça Seguinte");
+        JButton jb_prev = new JButton("<");
+        JButton jb_next = new JButton(">");
         jb_new = new JComboBox();
-        JButton jb_sel = new JButton("Selecionar");
+        JButton jb_sel = new JButton("Adiciona");
         JRadioButton jrb_radio = new JRadioButton("Versão Armada");
-        JButton jb_conf = new JButton("Confirma Set");
+        JButton jb_conf = new JButton("Ok");
 
         jb_prev.addActionListener(evt -> {
             try {
-                controller.prevMachine();
+                MachineSelectionController.getInstance().prevMachine();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
         jb_next.addActionListener(evt -> {
             try {
-                controller.nextMachine();
+                MachineSelectionController.getInstance().nextMachine();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
         jb_new.addActionListener(evt -> {
             try {
-                controller.changeStrategy();
+                MachineSelectionController.getInstance().changeStrategy();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
         jb_sel.addActionListener(evt -> {
             try {
-                controller.selectMachine();
+                MachineSelectionController.getInstance().selectMachine();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
         jrb_radio.addActionListener(evt -> {
             try {
-                controller.toggleRadMachine(jrb_radio.isSelected());
+                MachineSelectionController.getInstance().toggleRadMachine(jrb_radio.isSelected());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
         jb_conf.addActionListener(evt -> {
             try {
-                controller.confirmePlayerSet();
+                MachineSelectionController.getInstance().confirmePlayerSet();
+                this.setTitle("Seleção de peças, Jogador 2");
             } catch (Exception e) {
                 e.printStackTrace();
             }
