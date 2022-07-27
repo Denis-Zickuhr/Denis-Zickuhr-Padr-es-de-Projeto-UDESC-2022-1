@@ -82,8 +82,48 @@ public class Player extends TeamMember {
         }
     }
 
+    @Override
+    public void blockAttacks() {
+        for (Machine machine: getMachines()
+        ) {
+            machine.blockAttacks();
+        }
+    }
+
+    @Override
+    public void blockMovements() {
+        for (Machine machine: getMachines()
+        ) {
+            machine.blockMovements();
+        }
+    }
+
+    @Override
+    public void reset() {
+        for (Machine machine: getMachines()
+        ) {
+            machine.reset();
+        }
+    }
+
     public boolean isBlocked(){
         return (getMovements() + getAttacks()) == 0;
+    }
+
+    public void wipe(){
+        this.machines.clear();
+    }
+
+    public boolean inTurn(Machine machine){
+        for (Machine o: machines
+             ) {
+            if(machine == o){
+                System.out.println("Peça em turno");
+                return true;
+            }
+        }
+        System.out.println("Peça fora de turno");
+        return false;
     }
 
 }

@@ -4,6 +4,9 @@ import Controller.BoardController.BoardController;
 import Controller.BoardController.BoardObserver;
 import Controller.BoardController.Command.Commands.Attack;
 import Controller.BoardController.Command.Commands.Move;
+import Model.AbstractModel.AbstractMachine.Machine;
+import Model.Board;
+import Model.Player;
 import Model.Terrain.Terrain;
 import View.Components.ImagePanel;
 
@@ -32,6 +35,7 @@ public class BoardView extends JFrame implements BoardObserver {
         setTitle("Robo Attack");
         setLocation(0,0);
         loadScreen();
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     private void loadGrid() throws Exception {
@@ -45,7 +49,21 @@ public class BoardView extends JFrame implements BoardObserver {
         for (int key = 0; key < terrains.size(); key++) {
             JPanel panel = new JPanel(new BorderLayout());
             ImagePanel terrain = new ImagePanel(terrains.get(key).getDraw());
-            //panel.add(terrain, BorderLayout.CENTER, 0);
+            panel.add(terrain, BorderLayout.CENTER, 0);
+            if(terrains.get(key).getMachine() != null) {
+                JLabel stats = new JLabel(terrains.get(key).getMachine().toString());
+                stats.setForeground(Color.white);
+                Color color = Color.RED;
+                for (Machine machine: Board.getPlayer1().getMachines()
+                     ) {
+                    if (machine == terrains.get(key).getMachine()) {
+                        color = Color.BLUE;
+                        break;
+                    }
+                }
+                panel.setBackground(color);
+                panel.add(stats, BorderLayout.SOUTH, 1);
+            }
             int finalKey = key;
             terrain.addMouseListener(new MouseAdapter() {
 
@@ -65,7 +83,7 @@ public class BoardView extends JFrame implements BoardObserver {
                     }
                 }
             });
-            jp_grid.add(terrain);
+            jp_grid.add(panel);
         }
     }
 
@@ -73,7 +91,12 @@ public class BoardView extends JFrame implements BoardObserver {
         int index = 0;
         for (Component component: jp_grid.getComponents()
         ) {
-            ImagePanel panel = (ImagePanel) component;
+            JPanel father = (JPanel) component;
+            ImagePanel panel = (ImagePanel) father.getComponent(0);
+            if(terrains.get(index).getMachine() != null) {
+                JLabel stats = (JLabel) father.getComponent(1);
+                stats.setText(terrains.get(index).getMachine().toString());
+            }
             panel.setBuffer(terrains.get(index).getDraw());
             index++;
         }
@@ -169,6 +192,15 @@ public class BoardView extends JFrame implements BoardObserver {
 
     public void toggleAction(JPanel jp_buttons ,boolean enable, Action action){
         jp_buttons.getComponent(action.getIndex()).setEnabled(enable);
+    }
+
+    @Override
+    public void toggleAction(Player player , boolean enable, Action action){
+        if(Board.getPlayer1() == player){
+            player1Input.getComponent(action.getIndex()).setEnabled(enable);
+        }else if(Board.getPlayer2() == player){
+            player2Input.getComponent(action.getIndex()).setEnabled(enable);
+        }
     }
 
 }

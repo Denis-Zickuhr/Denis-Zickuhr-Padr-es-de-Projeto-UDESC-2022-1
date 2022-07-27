@@ -3,11 +3,15 @@ package Controller.BoardController;
 import Controller.BoardController.Command.CommandInvoker;
 import Controller.BoardController.State.BoardControllerState;
 import Controller.BoardController.State.BoardControllerWaitingPieceState;
-import Controller.BoardController.Visitor.ApplyOvechargeMachineVisitor;
 import Controller.BoardController.Visitor.ApplyTerrainEffectMachineVisitor;
 import Controller.BoardController.Visitor.UnalteredMachineVisitor;
+import Model.AbstractModel.AbstractMachine.AbstractProduct.MachineKingEntity;
+import Model.AbstractModel.AbstractMachine.AbstractProduct.MachineQueenEntity;
 import Model.AbstractModel.AbstractMachine.Machine;
 import Model.Board;
+import Model.ConcreteModel.ConcreteMachine.Armed.KingArmedMachine;
+import Model.ConcreteModel.ConcreteMachine.Basic.KingMachine;
+import Model.ConcreteModel.ConcreteMachine.Basic.QueenMachine;
 import Model.Player;
 import Model.Terrain.Terrain;
 import View.Action;
@@ -42,11 +46,26 @@ public class BoardController extends CommandInvoker{
     Terrain terrain;
     private boolean player1Ready = false;
     private boolean running = false;
-    private BoardControllerState state = new BoardControllerWaitingPieceState(this);
+    private Player turn = Board.getPlayer2();
+    private BoardControllerState state = new BoardControllerWaitingPieceState();
     private final ApplyTerrainEffectMachineVisitor applyTerrainEffectMachineVisitor = new ApplyTerrainEffectMachineVisitor();
     private final UnalteredMachineVisitor unalteredMachineVisitor = new UnalteredMachineVisitor();
-    private final ApplyOvechargeMachineVisitor applyOvechargeMachineVisitor = new ApplyOvechargeMachineVisitor();
 
+    public Player getTurn() {
+        return turn;
+    }
+
+    public void toggleTurn() {
+        if(Board.getPlayer1().isBlocked() & getTurn() == Board.getPlayer1()){
+                Board.getPlayer2().reset();
+                this.turn = Board.getPlayer2();
+        }
+        if(Board.getPlayer2().isBlocked() & getTurn() == Board.getPlayer2()){
+            Board.getPlayer1().reset();
+            this.turn = Board.getPlayer1();
+        }
+        System.out.println(this.turn.toString());
+    }
 
     public void setTerrain(Terrain terrain) {
         this.terrain = terrain;
@@ -106,32 +125,42 @@ public class BoardController extends CommandInvoker{
         return terrain.getMachine() != null;
     }
 
-    public void swapPiece(int[] cordsOrigin, int[] cordsDestiny) throws Exception {
+    public void swapPiece(int[] cordsOrigin, int[] cordsDestiny, boolean execute) throws Exception {
         if (board.getTerrain(cordsDestiny).getMachine() == null){
             Machine tempMachine = board.getTerrain(cordsOrigin).getMachine();
+            if(execute)
+                tempMachine.blockMovements();
+            else
+                tempMachine.resetMovements();
             getTerrain().removeMachine();
+            BoardController.getInstance().setTerrain(board.getTerrain(cordsOrigin));
             board.getTerrain(cordsDestiny).addMachine(tempMachine);
         }
         redraw();
+        toggleTurn();
+        toggleButtons();
     }
 
     public void attackMachine(int[] attacker, int[] defender, int vertex) throws Exception {
         board.getTerrain(attacker).accept(applyTerrainEffectMachineVisitor);
         board.getTerrain(defender).accept(unalteredMachineVisitor);
-        System.out.println(applyTerrainEffectMachineVisitor.getMachine().getHealth());
-        System.out.println(unalteredMachineVisitor.getMachine().getHealth());
-        System.out.println(Board.getPlayer1().getMachines().toString());
+        if(vertex > 0)
+            board.getTerrain(attacker).getMachine().blockAttacks();
+        else
+            board.getTerrain(attacker).getMachine().resetAttacks();
         int damage = applyTerrainEffectMachineVisitor.getMachine().getAttackPoints() * vertex;
         board.getTerrain(defender).getMachine().setHealth(unalteredMachineVisitor.getMachine().getHealth() - damage);
-        System.out.println(applyTerrainEffectMachineVisitor.getMachine().getHealth());
-        System.out.println(board.getTerrain(defender).getMachine().getHealth());
-        System.out.println(Board.getPlayer1().getMachines().toString());
+        toggleTurn();
+        toggleButtons();
     }
 
-    public boolean overCharge(int[] attacker) throws Exception {
-        board.getTerrain(attacker).accept(applyOvechargeMachineVisitor);
-        applyTerrainEffectMachineVisitor.getMachine();
-        return true;
+    public void overCharge(int[] attacker, int vertex) throws Exception {
+        board.getTerrain(attacker).accept(unalteredMachineVisitor);
+        getTerrain().getMachine().setHealth(unalteredMachineVisitor.getMachine().getAttackPoints()-(vertex*2));
+        if(vertex > 0)
+            getTerrain().getMachine().reset();
+        else
+            getTerrain().getMachine().block();
     }
 
     public boolean specialAttack() throws Exception {
@@ -139,11 +168,36 @@ public class BoardController extends CommandInvoker{
         return false;
     }
 
-    public void toggleButton(){
+    public void toggleButtons(){
         for (BoardObserver obs: observer
              ) {
-             obs.toggleAction(BoardView.player2Input, true, Action.ATTACK);
-            obs.toggleAction(BoardView.player2Input, true, Action.MOVE);
+
+            if(BoardController.getInstance().getTerrain().getMachine().getMoveSpan() > 0 & BoardController.getInstance().getTerrain().getMachine().getMovements() > 0)
+                obs.toggleAction(BoardController.getInstance().getTurn(), true, Action.MOVE);
+            else
+                obs.toggleAction(BoardController.getInstance().getTurn(), false, Action.MOVE);
+
+            if (BoardController.getInstance().getTerrain().getMachine().getAttacks() > 0)
+                obs.toggleAction(BoardController.getInstance().getTurn(), true, Action.ATTACK);
+            else
+                obs.toggleAction(BoardController.getInstance().getTurn(), false, Action.ATTACK);
+
+            if (BoardController.getInstance().getTerrain().getMachine().getClass() == KingMachine.class
+                    || BoardController.getInstance().getTerrain().getMachine().getClass() == QueenMachine.class
+                    || BoardController.getInstance().getTerrain().getMachine().getClass() == KingArmedMachine.class)
+                obs.toggleAction(BoardController.getInstance().getTurn(), true, Action.SPECIAL_ATTACK);
+            else
+                obs.toggleAction(BoardController.getInstance().getTurn(), false, Action.SPECIAL_ATTACK);
+
+            if (BoardController.getInstance().getTerrain().getMachine() != null)
+                obs.toggleAction(BoardController.getInstance().getTurn(), true, Action.CANCEL);
+            else
+                obs.toggleAction(BoardController.getInstance().getTurn(), false, Action.CANCEL);
+
+            if(BoardController.getInstance().getTerrain().getMachine().isBlocked())
+                obs.toggleAction(BoardController.getInstance().getTurn(), true, Action.OVERCHARGE);
+            else
+                obs.toggleAction(BoardController.getInstance().getTurn(), false, Action.OVERCHARGE);
         }
     }
 

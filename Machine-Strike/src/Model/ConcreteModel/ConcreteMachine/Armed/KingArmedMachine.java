@@ -11,7 +11,7 @@ public class KingArmedMachine extends MachineKingEntity {
     @Override
     public String toString() {
         return super.toString() +
-        "Ammo: " + this.ammo;
+                '\u204D' + "" + this.ammo;
     }
 
     public KingArmedMachine() {

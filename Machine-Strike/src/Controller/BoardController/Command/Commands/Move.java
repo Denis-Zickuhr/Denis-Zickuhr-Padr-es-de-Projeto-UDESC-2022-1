@@ -12,16 +12,16 @@ public class Move extends BoardControllerCommander {
 
     @Override
     public void execute(int[] destiny) throws Exception {
-        BoardController.getInstance().swapPiece(BoardController.getInstance().getTerrain().getCords(), destiny);
+        BoardController.getInstance().swapPiece(BoardController.getInstance().getTerrain().getCords(), destiny, true);
     }
 
     @Override
     public void undo(int[] destiny) throws Exception {
-        BoardController.getInstance().swapPiece(destiny, BoardController.getInstance().getTerrain().getCords());
+        BoardController.getInstance().swapPiece(destiny, BoardController.getInstance().getTerrain().getCords(), true);
     }
 
     @Override
     public void redo(int[] destiny) throws Exception {
-        BoardController.getInstance().swapPiece(BoardController.getInstance().getTerrain().getCords(),destiny);
+        BoardController.getInstance().swapPiece(BoardController.getInstance().getTerrain().getCords(),destiny, true);
     }
 }

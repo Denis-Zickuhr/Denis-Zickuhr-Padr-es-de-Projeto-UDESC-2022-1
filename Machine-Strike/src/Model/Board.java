@@ -20,7 +20,6 @@ public class Board {
             player1 = new Player();
         return player1;
     }
-
     public static Player getPlayer2() {
         if(player2 == null)
             player2 = new Player();
@@ -40,7 +39,6 @@ public class Board {
             terrains.add(new Terrain(TerrainType.GrasslandField, decimalToCord(i)));
         }
     }
-
     private int[] decimalToCord(int key){
         String[] temp = (Integer.toString(key, 8) + "").split("").clone();
         int[] cords;
@@ -51,18 +49,14 @@ public class Board {
         }
         return cords;
     }
-
     public void accept(MachineVisitor visitor) throws Exception {
         for (Terrain terrain: terrains)
             terrain.accept(visitor);
     }
-
     private final List<Terrain> terrains = new ArrayList<>(64);
-
     public ArrayList<Terrain> getTerrains() {
         return (ArrayList<Terrain>) terrains;
     }
-
     public Terrain getTerrain(int[] cords) throws Exception {
         StringBuilder aux = new StringBuilder("");
         for (int i: cords
@@ -75,7 +69,6 @@ public class Board {
         }
         throw new Exception("Index out of bounds Exception at Board.getTerrain()");
     }
-
     public void assembleBoard() {
 
         Random r = new Random();
@@ -97,5 +90,7 @@ public class Board {
             terrains.get(number).addMachine(machine);
         }
     }
+
+
 
 }

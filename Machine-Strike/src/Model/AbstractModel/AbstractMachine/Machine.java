@@ -39,11 +39,10 @@ public abstract class Machine extends TeamMember implements Cloneable {
     @Override
     public String toString() {
         return
-                "Attack: " + this.attackPoints + ","+
-                "Health: " + this.health + ","+
-                "Attack Distance" + this.attackDistance + ","+
-                "Move Span: " + this.moveSpan + ","+
-                "Armor set: " + Arrays.toString(this.armors);
+                '\u2694' + "" + this.attackPoints + ""+
+                        '\u2661' + this.health + ""+
+                '\u27B3' + "" + this.attackDistance + ""+
+                        "\uD83E\uDDB6" + this.moveSpan;
     }
 
     public String[] getBuffer() {
@@ -124,6 +123,22 @@ public abstract class Machine extends TeamMember implements Cloneable {
     }
 
     @Override
+    public void blockAttacks() {
+        this.attacks = 0;
+    }
+
+    @Override
+    public void blockMovements() {
+        this.movements = 0;
+    }
+
+    @Override
+    public void reset() {
+        this.movements = 1;
+        this.attacks = 1;
+    }
+
+    @Override
     public void block(){
         this.attacks = 0;
         this.movements = 0;
@@ -132,10 +147,17 @@ public abstract class Machine extends TeamMember implements Cloneable {
     @Override
     public Machine clone() {
         try {
-            return (Machine) super.clone();
+            Machine machine = (Machine) super.clone();
+            // Aberto a modificações
+            return machine;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
+    }
+
+    @Override
+    public boolean isBlocked(){
+        return (this.getMovements() + this.getAttacks()) == 0;
     }
 
 }

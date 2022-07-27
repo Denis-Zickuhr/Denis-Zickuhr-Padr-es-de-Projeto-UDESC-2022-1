@@ -5,10 +5,12 @@ import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.Machin
 import Model.ConcreteModel.ConcreteMachine.BuilderParts.Weapons.Weapon;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public class SoldierArmedMachine extends MachineSoldierEntity {
 
-    private int ammo = 30;
+
+    private int ammo;
 
     public int getAmmo() {
         return ammo;
@@ -17,16 +19,18 @@ public class SoldierArmedMachine extends MachineSoldierEntity {
     @Override
     public String toString() {
         return super.toString() +
-                "Ammo: " + this.ammo;
+                '\u204D' + "" + this.ammo;
     }
 
     public SoldierArmedMachine(MachineBuilder machineBuilder) {
         super(machineBuilder);
+        this.ammo = machineBuilder.getAmmo();
     }
 
     public static class MachineBuilder extends AbstractMachineBuilder {
 
-        private int ammo = 30;
+        Random r = new Random();
+        private final int ammo = r.nextInt(10);
         private Weapon weapon;
 
         public int getAmmo() {
@@ -36,7 +40,7 @@ public class SoldierArmedMachine extends MachineSoldierEntity {
         @Override
         public String toString() {
             return super.toString() +
-                    "Ammo: " + this.ammo;
+                    '\u204D' + "" + this.ammo;
         }
 
         @Override

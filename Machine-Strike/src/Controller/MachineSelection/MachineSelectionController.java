@@ -5,6 +5,7 @@ import Controller.MachineSelection.State.MachineSelectionKingState;
 import Controller.MachineSelection.State.MachineSelectionSoldierState;
 import Controller.MachineSelection.State.MachineSelectionState;
 import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
+import Model.Board;
 import Model.ConcreteModel.ConcreteMachine.ConcreteStrategy.*;
 import View.MachineSelectionView;
 
@@ -12,6 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MachineSelectionController{
+
+    public MachineSelectionController() {
+        Board.getPlayer1().wipe();
+        Board.getPlayer2().wipe();
+    }
 
     public void init() throws Exception {
         for (MachineSelectionObserver obs : observer) {

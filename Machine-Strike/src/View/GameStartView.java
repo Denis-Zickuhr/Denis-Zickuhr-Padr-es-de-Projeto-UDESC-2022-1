@@ -45,6 +45,7 @@ public class GameStartView extends JFrame {
         jb_newGame.addActionListener(evt -> {
             try {
                 new MachineSelectionView();
+                this.dispose();
             } catch (Exception e) {
                 e.printStackTrace();
             }
