@@ -8,28 +8,35 @@ public class CommandInvoker {
     private final List<Commando> instant = new ArrayList<>();
     private final List<Commando> pool = new ArrayList<>();
     private final List<Commando> done = new ArrayList<>();
+    private static CommandInvoker commandInvoker;
+
+    public static CommandInvoker getCommandInvoker() {
+        if(commandInvoker == null)
+            commandInvoker = new CommandInvoker();
+        return commandInvoker;
+    }
 
     public void add(Commando commando) {
         instant.add(commando);
     }
 
-    public void execute(int[] destiny) throws Exception {
+    public void execute() throws Exception {
         for (Commando commando: instant) {
-            commando.execute(destiny);
+            commando.execute();
             pool.add(commando);
         }
         instant.clear();
     }
 
-    public void undo(int[] origin) throws Exception {
+    public void undo() throws Exception {
         Commando commando = pool.remove(pool.size()-1);
-        commando.undo(origin);
+        commando.undo();
         done.add(commando);
     }
 
-    public void redo(int[] destiny) throws Exception {
+    public void redo() throws Exception {
         Commando commando = done.remove(done.size()-1);
-        commando.redo(destiny);
+        commando.redo();
         pool.add(commando);
     }
 }

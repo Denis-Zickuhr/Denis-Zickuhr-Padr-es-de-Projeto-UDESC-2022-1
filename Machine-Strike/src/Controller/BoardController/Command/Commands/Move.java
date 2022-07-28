@@ -1,27 +1,38 @@
 package Controller.BoardController.Command.Commands;
 
 import Controller.BoardController.BoardController;
+import Controller.BoardController.Command.AbstractCommandoBuilder;
 import Controller.BoardController.Command.BoardControllerCommander;
 
 public class Move extends BoardControllerCommander {
 
 
-    public Move() {
-        super(BoardController.getInstance());
+    public Move(CommandoBuilder commandoBuilder) {
+        super(commandoBuilder);
     }
 
     @Override
-    public void execute(int[] destiny) throws Exception {
+    public void execute() throws Exception {
         BoardController.getInstance().swapPiece(BoardController.getInstance().getTerrain().getCords(), destiny, true);
     }
 
     @Override
-    public void undo(int[] destiny) throws Exception {
+    public void undo() throws Exception {
         BoardController.getInstance().swapPiece(destiny, BoardController.getInstance().getTerrain().getCords(), true);
     }
 
     @Override
-    public void redo(int[] destiny) throws Exception {
+    public void redo() throws Exception {
         BoardController.getInstance().swapPiece(BoardController.getInstance().getTerrain().getCords(),destiny, true);
     }
+
+    public static class CommandoBuilder extends AbstractCommandoBuilder {
+
+        @Override
+        public Controller.BoardController.Command.Commando build(){
+            return new Move(this);
+        }
+
+    }
+
 }

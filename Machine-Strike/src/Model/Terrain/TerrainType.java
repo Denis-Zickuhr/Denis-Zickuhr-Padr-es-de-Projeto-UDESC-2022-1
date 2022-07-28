@@ -1,12 +1,12 @@
 package Model.Terrain;
 
 public enum TerrainType {
-    Chasm(-2, "Assets\\Terrain.png"),
-    Marsh(-1, "Assets\\Terrain.png"),
-    GrasslandField(0, "Assets\\Terrain.png"),
-    ForrestRain(1, "Assets\\Terrain.png"),
-    HillTerrain(2, "Assets\\Terrain.png"),
-    MountainTerrain(3, "Assets\\Terrain.png");
+    Chasm(-2, "Assets\\TerrainChasm.png"),
+    Marsh(-1, "Assets\\TerrainMarsh.png"),
+    GrasslandField(0, "Assets\\TerrainGrass.png"),
+    ForrestRain(1, "Assets\\TerrainForrest.png"),
+    HillTerrain(2, "Assets\\TerrainHill.png"),
+    Water(3, "Assets\\TerrainWater.png");
 
     private final int value;
     private final String buffer;

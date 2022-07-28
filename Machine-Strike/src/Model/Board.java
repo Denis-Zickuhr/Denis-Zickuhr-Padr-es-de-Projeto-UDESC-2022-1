@@ -4,6 +4,7 @@ import Controller.BoardController.Visitor.MachineVisitor;
 import Model.AbstractModel.AbstractMachine.Machine;
 import Model.Terrain.Terrain;
 import Model.Terrain.TerrainType;
+import View.BoardMap;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -36,7 +37,7 @@ public class Board {
 
     public Board() {
         for (int i = 0; i < 64; i++) {
-            terrains.add(new Terrain(TerrainType.GrasslandField, decimalToCord(i)));
+            terrains.add(new Terrain(BoardMap.getList().get(i), decimalToCord(i)));
         }
     }
     private int[] decimalToCord(int key){

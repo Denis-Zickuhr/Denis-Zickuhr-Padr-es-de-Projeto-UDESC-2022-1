@@ -1,12 +1,14 @@
 package Controller.BoardController;
 
+import Controller.BoardController.Command.AbstractCommandoBuilder;
+import Controller.BoardController.Command.CommandFactory.AbstractCommandoFactory;
 import Controller.BoardController.Command.CommandInvoker;
+import Controller.BoardController.Command.Commands.Attack;
+import Controller.BoardController.Command.Commands.Move;
 import Controller.BoardController.State.BoardControllerState;
 import Controller.BoardController.State.BoardControllerWaitingPieceState;
 import Controller.BoardController.Visitor.ApplyTerrainEffectMachineVisitor;
 import Controller.BoardController.Visitor.UnalteredMachineVisitor;
-import Model.AbstractModel.AbstractMachine.AbstractProduct.MachineKingEntity;
-import Model.AbstractModel.AbstractMachine.AbstractProduct.MachineQueenEntity;
 import Model.AbstractModel.AbstractMachine.Machine;
 import Model.Board;
 import Model.ConcreteModel.ConcreteMachine.Armed.KingArmedMachine;
@@ -20,7 +22,7 @@ import View.BoardView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoardController extends CommandInvoker{
+public class BoardController{
 
     private static BoardController instance;
     public static BoardController getInstance(){
@@ -50,6 +52,7 @@ public class BoardController extends CommandInvoker{
     private BoardControllerState state = new BoardControllerWaitingPieceState();
     private final ApplyTerrainEffectMachineVisitor applyTerrainEffectMachineVisitor = new ApplyTerrainEffectMachineVisitor();
     private final UnalteredMachineVisitor unalteredMachineVisitor = new UnalteredMachineVisitor();
+    private static AbstractCommandoBuilder commandoBuilder;
 
     public Player getTurn() {
         return turn;
@@ -59,12 +62,13 @@ public class BoardController extends CommandInvoker{
         if(Board.getPlayer1().isBlocked() & getTurn() == Board.getPlayer1()){
                 Board.getPlayer2().reset();
                 this.turn = Board.getPlayer2();
+            System.out.println("Player 2");
         }
         if(Board.getPlayer2().isBlocked() & getTurn() == Board.getPlayer2()){
             Board.getPlayer1().reset();
             this.turn = Board.getPlayer1();
+            System.out.println("Player 1");
         }
-        System.out.println(this.turn.toString());
     }
 
     public void setTerrain(Terrain terrain) {
@@ -118,6 +122,7 @@ public class BoardController extends CommandInvoker{
     }
 
     public void releasePiece() {
+        this.setState(new BoardControllerWaitingPieceState());
         this.terrain = null;
     }
 
@@ -126,6 +131,7 @@ public class BoardController extends CommandInvoker{
     }
 
     public void swapPiece(int[] cordsOrigin, int[] cordsDestiny, boolean execute) throws Exception {
+
         if (board.getTerrain(cordsDestiny).getMachine() == null){
             Machine tempMachine = board.getTerrain(cordsOrigin).getMachine();
             if(execute)
@@ -133,15 +139,19 @@ public class BoardController extends CommandInvoker{
             else
                 tempMachine.resetMovements();
             getTerrain().removeMachine();
-            BoardController.getInstance().setTerrain(board.getTerrain(cordsOrigin));
-            board.getTerrain(cordsDestiny).addMachine(tempMachine);
+            setTerrain(BoardController.getInstance().getBoard().getTerrain(cordsDestiny));
+            getTerrain().addMachine(tempMachine);
+
         }
+
         redraw();
-        toggleTurn();
         toggleButtons();
+        toggleTurn();
+
     }
 
     public void attackMachine(int[] attacker, int[] defender, int vertex) throws Exception {
+        System.out.println("ataquei");
         board.getTerrain(attacker).accept(applyTerrainEffectMachineVisitor);
         board.getTerrain(defender).accept(unalteredMachineVisitor);
         if(vertex > 0)
@@ -152,6 +162,7 @@ public class BoardController extends CommandInvoker{
         board.getTerrain(defender).getMachine().setHealth(unalteredMachineVisitor.getMachine().getHealth() - damage);
         toggleTurn();
         toggleButtons();
+        System.out.println("ataquei");
     }
 
     public void overCharge(int[] attacker, int vertex) throws Exception {
@@ -169,8 +180,12 @@ public class BoardController extends CommandInvoker{
     }
 
     public void toggleButtons(){
+        System.out.println("oi");
+        System.out.println(BoardController.getInstance().getTerrain().getMachine() == null);
         for (BoardObserver obs: observer
              ) {
+
+
 
             if(BoardController.getInstance().getTerrain().getMachine().getMoveSpan() > 0 & BoardController.getInstance().getTerrain().getMachine().getMovements() > 0)
                 obs.toggleAction(BoardController.getInstance().getTurn(), true, Action.MOVE);
@@ -204,9 +219,22 @@ public class BoardController extends CommandInvoker{
     public void redraw(){
         for (BoardObserver obs: observer
         ) {
-            obs.redraw(this.board.getTerrains());
+            obs.redraw(BoardController.getInstance().getBoard().getTerrains());
         }
     }
 
+    public void prepareCommand(AbstractCommandoFactory<?> factory) throws Exception {
 
+        commandoBuilder = factory.createCommandBuilder();
+        commandoBuilder.reset();
+        commandoBuilder.addOrigin(getTerrain().getCords());
+        if(commandoBuilder.isExecutable()){
+            CommandInvoker.getCommandInvoker().add(commandoBuilder.build());
+            CommandInvoker.getCommandInvoker().execute();
+        }
+    }
+
+    public static AbstractCommandoBuilder getCommandoBuilder() {
+        return commandoBuilder;
+    }
 }

@@ -2,6 +2,8 @@ package View;
 
 import Controller.BoardController.BoardController;
 import Controller.BoardController.BoardObserver;
+import Controller.BoardController.Command.CommandFactory.AttackCommandoFactory;
+import Controller.BoardController.Command.CommandFactory.MoveCommandoFactory;
 import Controller.BoardController.Command.Commands.Attack;
 import Controller.BoardController.Command.Commands.Move;
 import Model.AbstractModel.AbstractMachine.Machine;
@@ -12,9 +14,11 @@ import View.Components.ImagePanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BoardView extends JFrame implements BoardObserver {
     private final JPanel jp_contentPane = new JPanel();;
@@ -28,7 +32,7 @@ public class BoardView extends JFrame implements BoardObserver {
         controller.attach(this);
 
         setBackground(Color.black);
-        setSize(new Dimension(800,800));
+        setSize(new Dimension(800,900));
         BorderLayout layout = new BorderLayout();
         jp_contentPane.setLayout(layout);
         setContentPane(jp_contentPane);
@@ -47,23 +51,7 @@ public class BoardView extends JFrame implements BoardObserver {
     public void draw(ArrayList<Terrain> terrains){
         this.setVisible(true);
         for (int key = 0; key < terrains.size(); key++) {
-            JPanel panel = new JPanel(new BorderLayout());
             ImagePanel terrain = new ImagePanel(terrains.get(key).getDraw());
-            panel.add(terrain, BorderLayout.CENTER, 0);
-            if(terrains.get(key).getMachine() != null) {
-                JLabel stats = new JLabel(terrains.get(key).getMachine().toString());
-                stats.setForeground(Color.white);
-                Color color = Color.RED;
-                for (Machine machine: Board.getPlayer1().getMachines()
-                     ) {
-                    if (machine == terrains.get(key).getMachine()) {
-                        color = Color.BLUE;
-                        break;
-                    }
-                }
-                panel.setBackground(color);
-                panel.add(stats, BorderLayout.SOUTH, 1);
-            }
             int finalKey = key;
             terrain.addMouseListener(new MouseAdapter() {
 
@@ -83,21 +71,25 @@ public class BoardView extends JFrame implements BoardObserver {
                     }
                 }
             });
-            jp_grid.add(panel);
+            jp_grid.add(terrain);
         }
     }
 
     public void redraw(ArrayList<Terrain> terrains){
+
         int index = 0;
         for (Component component: jp_grid.getComponents()
         ) {
-            JPanel father = (JPanel) component;
-            ImagePanel panel = (ImagePanel) father.getComponent(0);
-            if(terrains.get(index).getMachine() != null) {
-                JLabel stats = (JLabel) father.getComponent(1);
-                stats.setText(terrains.get(index).getMachine().toString());
-            }
+            ImagePanel panel = (ImagePanel) component;
             panel.setBuffer(terrains.get(index).getDraw());
+            if(BoardController.getInstance().getTerrain() == terrains.get(index)){
+                String[] highlightBuffer = new String[terrains.get(index).getDraw().length + 1];
+                for (int i = 0; i < terrains.get(index).getDraw().length; i++) {
+                    highlightBuffer[i] = terrains.get(index).getDraw()[i];
+                }
+                highlightBuffer[terrains.get(index).getDraw().length] = "Assets/selector.png";
+                panel.setBuffer(highlightBuffer);
+            }
             index++;
         }
         this.repaint();
@@ -116,7 +108,7 @@ public class BoardView extends JFrame implements BoardObserver {
         player1Input.setBackground(Color.BLUE);
 
         buildActions(player1Input);
-        jp_contentPane.add(BorderLayout.SOUTH, player1Input);
+        jp_contentPane.add(BorderLayout.NORTH, player1Input);
 
         // Define a cor e as ações do jogador 2
 
@@ -125,7 +117,7 @@ public class BoardView extends JFrame implements BoardObserver {
 
         buildActions(player2Input);
 
-        jp_contentPane.add(BorderLayout.NORTH, player2Input);
+        jp_contentPane.add(BorderLayout.SOUTH, player2Input);
     }
 
     private void buildActions(JPanel jp_buttons) {
@@ -133,7 +125,6 @@ public class BoardView extends JFrame implements BoardObserver {
         jp_buttons.add(new JButton("Iniciar Ataque"), Action.ATTACK);
         jp_buttons.add(new JButton("Sobrecarregar"), Action.OVERCHARGE);
         jp_buttons.add(new JButton("Ataque Especial"), Action.SPECIAL_ATTACK);
-        jp_buttons.add(new JButton("Girar"), Action.SPIN);
         jp_buttons.add(new JRadioButton("Ataque Armado"), Action.ARMED_ATTACK);
         jp_buttons.add(new JButton("Cancelar Ação"), Action.CANCEL);
         addButtonActions(jp_buttons);
@@ -144,31 +135,33 @@ public class BoardView extends JFrame implements BoardObserver {
         jp_buttons.getComponent(Action.MOVE.getIndex()).addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e){
-                BoardController.getInstance().add(new Move());
+                try {
+                    BoardController.getInstance().prepareCommand(new MoveCommandoFactory());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         });
         jp_buttons.getComponent(Action.ATTACK.getIndex()).addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e){
-                BoardController.getInstance().add(new Attack());
+                try {
+                    BoardController.getInstance().prepareCommand(new AttackCommandoFactory());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         });
         jp_buttons.getComponent(Action.OVERCHARGE.getIndex()).addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e){
-
+                //BoardController.getInstance().prepareCommand(new ActionEvent(e.getSource(), command_id++, Action.OVERCHARGE.toString()));
             }
         });
         jp_buttons.getComponent(Action.SPECIAL_ATTACK.getIndex()).addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e){
-
-            }
-        });
-        jp_buttons.getComponent(Action.SPIN.getIndex()).addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e){
-
+                //BoardController.getInstance().prepareCommand(new ActionEvent(e.getSource(), command_id++, Action.SPECIAL_ATTACK.toString()));
             }
         });
         jp_buttons.getComponent(Action.CANCEL.getIndex()).addMouseListener(new MouseAdapter() {
@@ -176,6 +169,7 @@ public class BoardView extends JFrame implements BoardObserver {
             public void mousePressed(MouseEvent e){
                 BoardController.getInstance().releasePiece();
                 toggleAllButtons(jp_buttons, false);
+                redraw(BoardController.getInstance().getBoard().getTerrains());
             }
         });
     }
@@ -186,7 +180,6 @@ public class BoardView extends JFrame implements BoardObserver {
         toggleAction(jp_buttons, enabled, Action.ATTACK);
         toggleAction(jp_buttons, enabled, Action.ARMED_ATTACK);
         toggleAction(jp_buttons, enabled, Action.SPECIAL_ATTACK);
-        toggleAction(jp_buttons, enabled, Action.SPIN);
         toggleAction(jp_buttons, enabled, Action.CANCEL);
     }
 

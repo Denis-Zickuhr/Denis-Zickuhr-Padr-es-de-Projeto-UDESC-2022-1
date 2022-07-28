@@ -1,7 +1,9 @@
 package Model.Terrain;
 
+import Controller.BoardController.BoardController;
 import Controller.BoardController.Visitor.MachineVisitor;
 import Model.AbstractModel.AbstractMachine.Machine;
+import Model.Board;
 import Model.ConcreteModel.ConcreteMachine.Basic.SoldierMachine;
 
 public class Terrain {
@@ -45,18 +47,24 @@ public class Terrain {
     public String[] getDraw() {
         if (this.machine != null) {
             int bufferLength = machine.getBuffer().length;
-            // Gambiarra temporaria, onde recalculo o tamanho do buffer caso for uma peça com buffer [3]
-            // O builder tá gerando apenas como 4
             if(machine.getClass() == SoldierMachine.class){
                 bufferLength += -1;
             }
-            String[] buffer = new String[1 + bufferLength];
+            String[] buffer = new String[2 + bufferLength];
             buffer[0] = terrainType.buffer();
             for (int i = 1; i < bufferLength+1; i++) {
                 buffer[i] = machine.getBuffer()[i - 1].replaceAll("#", "small");
             }
+            String teamCard;
+            if(Board.getPlayer1().getMachines().contains(machine)){
+                teamCard = "Assets/t1card.png";
+            }else{
+                teamCard = "Assets/t2card.png";
+            }
+            buffer[buffer.length-1] = teamCard;
             return buffer;
         }
+
         return new String[]{terrainType.buffer()};
     }
 
