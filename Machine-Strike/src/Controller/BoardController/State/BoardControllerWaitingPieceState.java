@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class BoardControllerWaitingPieceState extends BoardControllerState{
 
 
-    public void terrainClicked(int[] cords){
+    public void terrainClicked(int[] cords) throws Exception {
 
         int formattedCords = formatCords(cords);
 

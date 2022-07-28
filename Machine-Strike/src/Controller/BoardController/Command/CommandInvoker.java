@@ -1,5 +1,8 @@
 package Controller.BoardController.Command;
 
+import Controller.BoardController.BoardController;
+import Controller.PointCounterController.PointCounterController;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,17 +29,26 @@ public class CommandInvoker {
             pool.add(commando);
         }
         instant.clear();
+        BoardController.getInstance().releasePiece();
+        BoardController.getInstance().disableAllButtons();
+        PointCounterController.getInstance().propagateUpdate();
     }
 
     public void undo() throws Exception {
         Commando commando = pool.remove(pool.size()-1);
         commando.undo();
         done.add(commando);
+        BoardController.getInstance().releasePiece();
+        BoardController.getInstance().disableAllButtons();
+        PointCounterController.getInstance().propagateUpdate();
     }
 
     public void redo() throws Exception {
         Commando commando = done.remove(done.size()-1);
         commando.redo();
         pool.add(commando);
+        BoardController.getInstance().releasePiece();
+        BoardController.getInstance().disableAllButtons();
+        PointCounterController.getInstance().propagateUpdate();
     }
 }

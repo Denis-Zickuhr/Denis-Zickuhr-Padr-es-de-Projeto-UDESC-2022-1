@@ -4,8 +4,10 @@ import Controller.BoardController.BoardController;
 import Controller.BoardController.BoardObserver;
 import Controller.BoardController.Command.CommandFactory.AttackCommandoFactory;
 import Controller.BoardController.Command.CommandFactory.MoveCommandoFactory;
+import Controller.BoardController.Command.CommandFactory.OverchargeCommandoFactory;
 import Controller.BoardController.Command.Commands.Attack;
 import Controller.BoardController.Command.Commands.Move;
+import Controller.BoardController.Command.Commands.Overcharge;
 import Model.AbstractModel.AbstractMachine.Machine;
 import Model.Board;
 import Model.Player;
@@ -31,6 +33,8 @@ public class BoardView extends JFrame implements BoardObserver {
         BoardController controller = BoardController.getInstance();
         controller.attach(this);
 
+        new PointCounterView();
+
         setBackground(Color.black);
         setSize(new Dimension(800,900));
         BorderLayout layout = new BorderLayout();
@@ -51,7 +55,9 @@ public class BoardView extends JFrame implements BoardObserver {
     public void draw(ArrayList<Terrain> terrains){
         this.setVisible(true);
         for (int key = 0; key < terrains.size(); key++) {
+            JPanel holder = new JPanel(new BorderLayout());
             ImagePanel terrain = new ImagePanel(terrains.get(key).getDraw());
+            holder.add(terrain, BorderLayout.CENTER, 0);
             int finalKey = key;
             terrain.addMouseListener(new MouseAdapter() {
 
@@ -71,8 +77,9 @@ public class BoardView extends JFrame implements BoardObserver {
                     }
                 }
             });
-            jp_grid.add(terrain);
+            jp_grid.add(holder);
         }
+        redraw(terrains);
     }
 
     public void redraw(ArrayList<Terrain> terrains){
@@ -80,9 +87,16 @@ public class BoardView extends JFrame implements BoardObserver {
         int index = 0;
         for (Component component: jp_grid.getComponents()
         ) {
-            ImagePanel panel = (ImagePanel) component;
+
+            JPanel holder = (JPanel) component;
+
+            ImagePanel panel = (ImagePanel) holder.getComponent(0);
             panel.setBuffer(terrains.get(index).getDraw());
-            if(BoardController.getInstance().getTerrain() == terrains.get(index)){
+
+
+            boolean selectedMachine = BoardController.getInstance().getTerrain() == terrains.get(index);
+            if(selectedMachine){
+
                 String[] highlightBuffer = new String[terrains.get(index).getDraw().length + 1];
                 for (int i = 0; i < terrains.get(index).getDraw().length; i++) {
                     highlightBuffer[i] = terrains.get(index).getDraw()[i];
@@ -90,6 +104,17 @@ public class BoardView extends JFrame implements BoardObserver {
                 highlightBuffer[terrains.get(index).getDraw().length] = "Assets/selector.png";
                 panel.setBuffer(highlightBuffer);
             }
+
+            boolean containsMachine = terrains.get(index).getMachine() != null;
+
+            if(holder.getComponents().length > 1)
+                holder.remove(1);
+
+            if(containsMachine){
+                holder.add(new JLabel(terrains.get(index).getMachine().toString()), BorderLayout.SOUTH, 1);
+            }
+
+            holder.updateUI();
             index++;
         }
         this.repaint();
@@ -155,7 +180,12 @@ public class BoardView extends JFrame implements BoardObserver {
         jp_buttons.getComponent(Action.OVERCHARGE.getIndex()).addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e){
-                //BoardController.getInstance().prepareCommand(new ActionEvent(e.getSource(), command_id++, Action.OVERCHARGE.toString()));
+
+                try {
+                    BoardController.getInstance().prepareCommand(new OverchargeCommandoFactory());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         });
         jp_buttons.getComponent(Action.SPECIAL_ATTACK.getIndex()).addMouseListener(new MouseAdapter() {
@@ -194,6 +224,12 @@ public class BoardView extends JFrame implements BoardObserver {
         }else if(Board.getPlayer2() == player){
             player2Input.getComponent(action.getIndex()).setEnabled(enable);
         }
+    }
+
+    @Override
+    public void disableAllButtons() {
+        toggleAllButtons(player1Input, false);
+        toggleAllButtons(player2Input, false);
     }
 
 }

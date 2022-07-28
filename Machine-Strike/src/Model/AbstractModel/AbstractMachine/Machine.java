@@ -12,20 +12,12 @@ public abstract class Machine extends TeamMember implements Cloneable {
     protected int attackPoints;
     protected int attackDistance;
     protected int moveSpan;
-    protected int[] cords;
     protected Armor[] armors = new Armor[4];
     protected String[] buffer;
     protected MovementBehaviourAdapter movement;
     protected int attacks = 1;
     protected int movements = 1;
-
-    public int[] getCords() {
-        return cords;
-    }
-
-    public void setCords(int[] cords) {
-        this.cords = cords;
-    }
+    protected boolean overcharged = false;
 
     public MovementBehaviourAdapter getAdapter() {
         return movement;
@@ -34,7 +26,6 @@ public abstract class Machine extends TeamMember implements Cloneable {
     public void setMovement(MovementBehaviourAdapter movement) {
         this.movement = movement;
     }
-
 
     @Override
     public String toString() {
@@ -47,6 +38,14 @@ public abstract class Machine extends TeamMember implements Cloneable {
 
     public String[] getBuffer() {
         return buffer;
+    }
+
+    public boolean isOvercharged() {
+        return overcharged;
+    }
+
+    public void setOvercharged(boolean overcharged) {
+        this.overcharged = overcharged;
     }
 
     public void setBuffer(String[] buffer) {
