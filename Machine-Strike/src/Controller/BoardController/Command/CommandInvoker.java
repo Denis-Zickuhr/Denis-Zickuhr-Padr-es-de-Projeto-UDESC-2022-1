@@ -51,4 +51,12 @@ public class CommandInvoker {
         BoardController.getInstance().disableAllButtons();
         PointCounterController.getInstance().propagateUpdate();
     }
+
+    public int getUndo(){
+        return pool.size();
+    }
+
+    public int getRedo(){
+        return done.size();
+    }
 }

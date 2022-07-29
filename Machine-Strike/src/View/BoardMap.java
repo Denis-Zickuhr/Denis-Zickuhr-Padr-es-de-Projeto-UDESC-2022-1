@@ -1,7 +1,6 @@
 package View;
 
-import Model.Terrain.Terrain;
-import Model.Terrain.TerrainType;
+import Model.ConcreteModel.TerrainType;
 
 import java.util.ArrayList;
 import java.util.List;

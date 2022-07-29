@@ -1,16 +1,16 @@
 package Controller.BoardController.Visitor;
 
-import Model.AbstractModel.AbstractMachine.Machine;
+import Model.AbstractModel.Machine;
 
 public class Cloner<T extends Machine> {
 
-        private T clone;
+        private final T clone;
 
-        public Cloner(T base) {
-            this.clone = base;
+        public Cloner(T clone) {
+            this.clone = clone;
         }
 
-        public T duplicate() throws Exception {
-            return  (T) clone.clone();
+        public Machine duplicate() throws Exception {
+            return  clone.clone();
     }
 }

@@ -4,8 +4,8 @@ import Controller.MachineSelection.Factory.AbstractMachineFactory;
 import Controller.MachineSelection.Factory.ConcreteMachineFactory;
 import Controller.MachineSelection.Factory.ConcreteArmedMachineFactory;
 import Controller.MachineSelection.MachineSelectionController;
-import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
-import Model.AbstractModel.AbstractMachine.Machine;
+import Model.AbstractModel.AbstractStrategy;
+import Model.AbstractModel.Machine;
 
 public class MachineSelectionSoldierState extends MachineSelectionState {
 

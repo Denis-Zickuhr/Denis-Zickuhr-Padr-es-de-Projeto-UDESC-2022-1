@@ -1,9 +1,9 @@
 package Controller.MachineSelection.Factory;
 
-import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
-import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.MachineSoldierEntity;
-import Model.AbstractModel.AbstractMachine.Machine;
-import Model.ConcreteModel.ConcreteMachine.Armed.KingArmedMachine;
+import Model.AbstractModel.AbstractStrategy;
+import Model.AbstractModel.MachineSoldierEntity;
+import Model.AbstractModel.Machine;
+import Model.ConcreteModel.Armed.KingArmedMachine;
 
 public class ConcreteArmedMachineFactory implements AbstractMachineFactory{
 

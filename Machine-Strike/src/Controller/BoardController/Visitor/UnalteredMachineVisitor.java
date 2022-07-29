@@ -1,10 +1,13 @@
 package Controller.BoardController.Visitor;
 
-import Model.AbstractModel.AbstractMachine.Machine;
-import Model.ConcreteModel.ConcreteMachine.Armed.KingArmedMachine;
-import Model.ConcreteModel.ConcreteMachine.Basic.KingMachine;
-import Model.ConcreteModel.ConcreteMachine.Basic.QueenMachine;
-import Model.Terrain.Terrain;
+import Model.AbstractModel.Machine;
+import Model.ConcreteModel.Armed.KingArmedMachine;
+import Model.ConcreteModel.Basic.KingMachine;
+import Model.ConcreteModel.Basic.QueenMachine;
+import Model.ConcreteModel.Terrain;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UnalteredMachineVisitor implements MachineVisitor{
 
@@ -16,12 +19,12 @@ public class UnalteredMachineVisitor implements MachineVisitor{
         machine = cloner.duplicate();
     }
 
-    public Machine getMachine() {
+    public Machine getMachineList() {
         return machine;
     }
 
     public MachineAbilities getMachineAbilities(){
-        return new MachineAbilities(this.machine);
+        return new MachineAbilities(machine);
     }
 
     public record MachineAbilities(Machine machine) {
@@ -35,7 +38,11 @@ public class UnalteredMachineVisitor implements MachineVisitor{
         }
 
         public boolean canSpecialAttack() {
-            return machine.getClass() == KingMachine.class || machine.getClass() == QueenMachine.class || machine.getClass() == KingArmedMachine.class;
+            return (machine.getClass() == KingMachine.class || machine.getClass() == QueenMachine.class || machine.getClass() == KingArmedMachine.class) & !machine.isSpecial();
+        }
+
+        public boolean canLongRange() {
+            return machine.getAmmo() > 0;
         }
 
         public boolean canCancel() {

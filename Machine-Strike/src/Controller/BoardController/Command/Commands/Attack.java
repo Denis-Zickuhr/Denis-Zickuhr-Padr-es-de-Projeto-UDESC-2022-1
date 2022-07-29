@@ -3,7 +3,6 @@ package Controller.BoardController.Command.Commands;
 import Controller.BoardController.BoardController;
 import Controller.BoardController.Command.AbstractCommandoBuilder;
 import Controller.BoardController.Command.BoardControllerCommander;
-import Model.Board;
 
 public class Attack extends BoardControllerCommander {
 

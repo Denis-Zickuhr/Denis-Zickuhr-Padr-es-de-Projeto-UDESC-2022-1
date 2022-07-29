@@ -4,10 +4,9 @@ import Controller.BoardController.BoardController;
 import Controller.MachineSelection.State.MachineSelectionKingState;
 import Controller.MachineSelection.State.MachineSelectionSoldierState;
 import Controller.MachineSelection.State.MachineSelectionState;
-import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
-import Model.Board;
-import Model.ConcreteModel.ConcreteMachine.ConcreteStrategy.*;
-import View.MachineSelectionView;
+import Model.AbstractModel.AbstractStrategy;
+import Model.ConcreteModel.Board;
+import Model.ConcreteModel.ConcreteStrategy.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,6 +115,10 @@ public class MachineSelectionController{
     }
 
     public static AbstractStrategy[] getStrategies(){
+
+        // As strategies são armazenadas estaticamente no COMBOBOX
+
+
         AbstractStrategy[] st = new AbstractStrategy[10];
         st[0] = new BlackStrategy();
         st[1] = new WhiteStrategy();

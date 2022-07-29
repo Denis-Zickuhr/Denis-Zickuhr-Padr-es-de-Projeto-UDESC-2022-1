@@ -1,7 +1,7 @@
 package Controller.BoardController.Visitor;
 
-import Model.AbstractModel.AbstractMachine.Machine;
-import Model.Terrain.Terrain;
+import Model.AbstractModel.Machine;
+import Model.ConcreteModel.Terrain;
 
 public class ApplyTerrainEffectMachineVisitor implements MachineVisitor{
 

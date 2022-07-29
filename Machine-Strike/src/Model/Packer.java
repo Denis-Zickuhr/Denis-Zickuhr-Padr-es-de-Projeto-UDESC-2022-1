@@ -1,7 +1,7 @@
 package Model;
 
 
-import Model.Terrain.TerrainType;
+import Model.ConcreteModel.TerrainType;
 import View.BoardMap;
 
 import java.io.BufferedReader;
