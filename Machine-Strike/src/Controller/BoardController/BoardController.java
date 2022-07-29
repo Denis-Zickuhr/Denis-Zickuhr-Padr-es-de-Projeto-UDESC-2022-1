@@ -7,14 +7,15 @@ import Controller.BoardController.State.BoardControllerState;
 import Controller.BoardController.State.BoardControllerWaitingPieceState;
 import Controller.BoardController.Visitor.ApplyTerrainEffectMachineVisitor;
 import Controller.BoardController.Visitor.UnalteredMachineVisitor;
-import Model.AbstractModel.AbstractMachine.Machine;
-import Model.Board;
-import Model.Player;
-import Model.Terrain.Terrain;
+import Model.AbstractModel.Machine;
+import Model.ConcreteModel.Board;
+import Model.ConcreteModel.Player;
+import Model.ConcreteModel.Terrain;
 import View.Action;
 import View.Views.BoardView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BoardController{
@@ -108,14 +109,6 @@ public class BoardController{
         this.state = state;
     }
 
-    public void terrainClicked(int[] cords) throws Exception {
-        state.terrainClicked(cords);
-        for (BoardObserver obs: observer
-        ) {
-            obs.redraw(board.getTerrains());
-        }
-    }
-
     public void releasePiece() {
         this.setState(new BoardControllerWaitingPieceState());
         this.terrain = null;
@@ -130,9 +123,9 @@ public class BoardController{
         if (board.getTerrain(cordsDestiny).getMachine() == null){
             Machine tempMachine = board.getTerrain(cordsOrigin).getMachine();
             if(execute)
-                tempMachine.blockMovements();
+                board.getTerrain(cordsOrigin).getMachine().blockMovements();
             else
-                tempMachine.resetMovements();
+                board.getTerrain(cordsOrigin).getMachine().resetMovements();
             board.getTerrain(cordsOrigin).removeMachine();
             board.getTerrain(cordsDestiny).addMachine(tempMachine);
             releasePiece();
@@ -160,7 +153,7 @@ public class BoardController{
             board.getTerrain(attacker).accept(applyTerrainEffectMachineVisitor);
             int damage = applyTerrainEffectMachineVisitor.getMachine().getAttackPoints() * vertex;
             board.getTerrain(defender).accept(unalteredMachineVisitor);
-            board.getTerrain(defender).getMachine().setHealth(unalteredMachineVisitor.getMachine().getHealth() - damage);
+            board.getTerrain(defender).getMachine().setHealth(unalteredMachineVisitor.getMachineList().getHealth() - damage);
             System.out.println("terminei de atacar");
         }
 
@@ -188,7 +181,8 @@ public class BoardController{
                 board.getTerrain(attacker).getMachine().reload();
             }
             board.getTerrain(defender).accept(unalteredMachineVisitor);
-            board.getTerrain(defender).getMachine().setHealth(unalteredMachineVisitor.getMachine().getHealth() - damage);
+            System.out.println(formatCords(defender));
+            board.getTerrain(defender).getMachine().setHealth(unalteredMachineVisitor.getMachineList().getHealth() - damage);
             System.out.println("terminei de atacar");
         }
 
@@ -200,7 +194,7 @@ public class BoardController{
 
     public void overCharge(int[] origin, int vertex) throws Exception {
         board.getTerrain(origin).accept(unalteredMachineVisitor);
-        board.getTerrain(origin).getMachine().setHealth(unalteredMachineVisitor.getMachine().getHealth()-(vertex*2));
+        board.getTerrain(origin).getMachine().setHealth(unalteredMachineVisitor.getMachineList().getHealth()-(vertex*2));
 
         if(vertex > 0) {
             board.getTerrain(origin).getMachine().reset();
@@ -219,6 +213,23 @@ public class BoardController{
         board.getTerrain(origin).getMachine().getAdapter().specialAttack(reverse);
     }
 
+    public void prepareCommand(AbstractCommandoFactory<?> factory) throws Exception {
+
+        commandoBuilder = factory.createCommandBuilder();
+        commandoBuilder.reset();
+        commandoBuilder.addOrigin(getTerrain().getCords());
+        if(commandoBuilder.isExecutable()){
+            CommandInvoker.getCommandInvoker().add(commandoBuilder.build());
+            CommandInvoker.getCommandInvoker().execute();
+            releasePiece();
+            redraw();
+        }
+    }
+
+    public static AbstractCommandoBuilder getCommandoBuilder() {
+        return commandoBuilder;
+    }
+
     public void toggleButtons() throws Exception {
         Player player = BoardController.getInstance().getTurn();
 
@@ -226,7 +237,7 @@ public class BoardController{
             getTerrain().accept(unalteredMachineVisitor);
 
             for (BoardObserver obs: observer
-                 ) {
+            ) {
                 obs.toggleAction(player, unalteredMachineVisitor.getMachineAbilities().canMove(), Action.MOVE);
                 obs.toggleAction(player, unalteredMachineVisitor.getMachineAbilities().canAttack(), Action.ATTACK);
                 obs.toggleAction(player, unalteredMachineVisitor.getMachineAbilities().canSpecialAttack(), Action.SPECIAL_MOVE);
@@ -249,6 +260,7 @@ public class BoardController{
         }
     }
 
+
     public void redraw(){
         for (BoardObserver obs: observer
         ) {
@@ -256,20 +268,20 @@ public class BoardController{
         }
     }
 
-    public void prepareCommand(AbstractCommandoFactory<?> factory) throws Exception {
-
-        commandoBuilder = factory.createCommandBuilder();
-        commandoBuilder.reset();
-        commandoBuilder.addOrigin(getTerrain().getCords());
-        if(commandoBuilder.isExecutable()){
-            CommandInvoker.getCommandInvoker().add(commandoBuilder.build());
-            CommandInvoker.getCommandInvoker().execute();
-            releasePiece();
-            redraw();
+    public void terrainClicked(int[] cords) throws Exception {
+        state.terrainClicked(cords);
+        for (BoardObserver obs: observer
+        ) {
+            obs.redraw(board.getTerrains());
         }
     }
 
-    public static AbstractCommandoBuilder getCommandoBuilder() {
-        return commandoBuilder;
+    public int formatCords(int[] cords){
+        return Integer.parseInt(Integer.toString(Integer.parseInt(Arrays.toString(cords).replaceAll(" ", "").
+                replaceAll("\\[", "").
+                replaceAll("\\]", "").
+                replaceAll(",", ""), 8), 10));
     }
+
+
 }

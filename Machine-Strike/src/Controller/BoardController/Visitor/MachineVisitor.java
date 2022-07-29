@@ -1,6 +1,6 @@
 package Controller.BoardController.Visitor;
 
-import Model.Terrain.Terrain;
+import Model.ConcreteModel.Terrain;
 
 public interface MachineVisitor {
 

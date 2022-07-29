@@ -1,9 +1,9 @@
 package Controller.BoardController.State;
 
 import Controller.BoardController.BoardController;
-import Model.AbstractModel.AbstractMachine.Machine;
-import Model.Player;
-import Model.Terrain.Terrain;
+import Model.AbstractModel.Machine;
+import Model.ConcreteModel.Player;
+import Model.ConcreteModel.Terrain;
 
 import java.util.Arrays;
 

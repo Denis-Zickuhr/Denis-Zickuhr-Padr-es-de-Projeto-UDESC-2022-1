@@ -1,14 +1,11 @@
 package Controller.BoardController.State;
 
 import Controller.BoardController.BoardController;
-import Controller.BoardController.Command.AbstractCommandoBuilder;
 import Controller.BoardController.Command.CommandInvoker;
 import Controller.BoardController.Command.Commands.Attack;
 import Controller.BoardController.Command.Commands.AttackDistance;
 import Controller.BoardController.Command.Commands.Move;
-import Model.AbstractModel.AbstractMachine.Machine;
-
-import static Controller.BoardController.Command.CommandInvoker.getCommandInvoker;
+import Model.AbstractModel.Machine;
 
 public class BoardControllerWaitingActionState extends BoardControllerState{
 

@@ -50,7 +50,9 @@ public class GameStartView extends JFrame {
                 e.printStackTrace();
             }
         });
-        jb_about.addActionListener(evt -> {});
+        jb_about.addActionListener(evt -> {
+            new AboutView(this);
+        });
 
         jb_load.addActionListener(evt -> {
             try {

@@ -3,9 +3,9 @@ package View.Views;
 import Controller.BoardController.BoardController;
 import Controller.BoardController.BoardObserver;
 import Controller.BoardController.Command.CommandFactory.*;
-import Model.Board;
-import Model.Player;
-import Model.Terrain.Terrain;
+import Model.ConcreteModel.Board;
+import Model.ConcreteModel.Player;
+import Model.ConcreteModel.Terrain;
 import View.Action;
 import View.Components.ImagePanel;
 

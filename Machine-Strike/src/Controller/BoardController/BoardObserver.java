@@ -1,10 +1,9 @@
 package Controller.BoardController;
 
-import Model.Player;
-import Model.Terrain.Terrain;
+import Model.ConcreteModel.Player;
+import Model.ConcreteModel.Terrain;
 import View.Action;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 public interface BoardObserver {

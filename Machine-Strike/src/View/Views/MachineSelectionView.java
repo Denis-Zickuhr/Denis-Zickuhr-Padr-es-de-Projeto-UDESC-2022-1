@@ -2,8 +2,8 @@ package View.Views;
 
 import Controller.MachineSelection.MachineSelectionController;
 import Controller.MachineSelection.MachineSelectionObserver;
-import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
-import Model.AbstractModel.AbstractMachine.Machine;
+import Model.AbstractModel.AbstractStrategy;
+import Model.AbstractModel.Machine;
 import View.Components.ImagePanel;
 
 import javax.swing.*;

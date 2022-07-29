@@ -1,12 +1,9 @@
 package View.Views;
 
 import Controller.BoardController.BoardController;
-import Controller.BoardController.Command.CommandFactory.MoveCommandoFactory;
-import Controller.BoardController.Command.CommandInvoker;
-import Controller.MachineSelection.MachineSelectionController;
 import Controller.PointCounterController.PointControllerObserver;
 import Controller.PointCounterController.PointCounterController;
-import Model.Board;
+import Model.ConcreteModel.Board;
 
 import javax.swing.*;
 import java.awt.*;

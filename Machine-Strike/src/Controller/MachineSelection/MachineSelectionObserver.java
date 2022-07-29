@@ -1,7 +1,7 @@
 package Controller.MachineSelection;
 
-import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
-import Model.AbstractModel.AbstractMachine.Machine;
+import Model.AbstractModel.AbstractStrategy;
+import Model.AbstractModel.Machine;
 
 public interface MachineSelectionObserver {
 
