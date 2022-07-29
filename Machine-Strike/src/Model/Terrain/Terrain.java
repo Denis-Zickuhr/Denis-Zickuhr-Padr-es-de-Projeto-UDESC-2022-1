@@ -46,6 +46,9 @@ public class Terrain {
 
     public String[] getDraw() {
         if (this.machine != null) {
+            if(this.machine.getPoints() <= 0){
+                return new String[]{terrainType.buffer(), "Assets/fire.png"};
+            }
             int bufferLength = machine.getBuffer().length;
             if(machine.getClass() == SoldierMachine.class){
                 bufferLength += -1;

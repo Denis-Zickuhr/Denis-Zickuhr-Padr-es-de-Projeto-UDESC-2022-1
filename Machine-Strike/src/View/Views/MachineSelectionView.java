@@ -1,4 +1,4 @@
-package View;
+package View.Views;
 
 import Controller.MachineSelection.MachineSelectionController;
 import Controller.MachineSelection.MachineSelectionObserver;

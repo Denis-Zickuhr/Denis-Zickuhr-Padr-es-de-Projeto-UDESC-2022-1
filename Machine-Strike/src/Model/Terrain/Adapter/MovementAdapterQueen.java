@@ -1,7 +1,6 @@
 package Model.Terrain.Adapter;
 
 import Model.AbstractModel.AbstractMachine.AbstractProduct.MachineQueenEntity;
-import Model.AbstractModel.AbstractMachine.Machine;
 
 public class MovementAdapterQueen implements MovementBehaviourAdapter {
 
@@ -12,8 +11,12 @@ public class MovementAdapterQueen implements MovementBehaviourAdapter {
     }
 
     @Override
-    public boolean specialAttack(Machine... machine) {
-        adaptee.Stone();
-        return false;
+    public void specialAttack(boolean reverse) {
+        if(reverse){
+            adaptee.destone();
+        }
+        else{
+            adaptee.stone();
+        }
     }
 }

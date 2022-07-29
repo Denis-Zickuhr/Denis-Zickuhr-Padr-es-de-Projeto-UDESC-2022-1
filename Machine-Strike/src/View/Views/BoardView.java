@@ -1,26 +1,19 @@
-package View;
+package View.Views;
 
 import Controller.BoardController.BoardController;
 import Controller.BoardController.BoardObserver;
-import Controller.BoardController.Command.CommandFactory.AttackCommandoFactory;
-import Controller.BoardController.Command.CommandFactory.MoveCommandoFactory;
-import Controller.BoardController.Command.CommandFactory.OverchargeCommandoFactory;
-import Controller.BoardController.Command.Commands.Attack;
-import Controller.BoardController.Command.Commands.Move;
-import Controller.BoardController.Command.Commands.Overcharge;
-import Model.AbstractModel.AbstractMachine.Machine;
+import Controller.BoardController.Command.CommandFactory.*;
 import Model.Board;
 import Model.Player;
 import Model.Terrain.Terrain;
+import View.Action;
 import View.Components.ImagePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class BoardView extends JFrame implements BoardObserver {
     private final JPanel jp_contentPane = new JPanel();;
@@ -36,8 +29,9 @@ public class BoardView extends JFrame implements BoardObserver {
         new PointCounterView();
 
         setBackground(Color.black);
-        setSize(new Dimension(800,900));
+        setSize(new Dimension(850,950));
         BorderLayout layout = new BorderLayout();
+        jp_contentPane.setBackground(Color.black);
         jp_contentPane.setLayout(layout);
         setContentPane(jp_contentPane);
         setTitle("Robo Attack");
@@ -57,6 +51,7 @@ public class BoardView extends JFrame implements BoardObserver {
         for (int key = 0; key < terrains.size(); key++) {
             JPanel holder = new JPanel(new BorderLayout());
             ImagePanel terrain = new ImagePanel(terrains.get(key).getDraw());
+            terrain.setBackground(Color.black);
             holder.add(terrain, BorderLayout.CENTER, 0);
             int finalKey = key;
             terrain.addMouseListener(new MouseAdapter() {
@@ -111,6 +106,7 @@ public class BoardView extends JFrame implements BoardObserver {
                 holder.remove(1);
 
             if(containsMachine){
+                if(terrains.get(index).getMachine().getPoints() > 0)
                 holder.add(new JLabel(terrains.get(index).getMachine().toString()), BorderLayout.SOUTH, 1);
             }
 
@@ -146,18 +142,18 @@ public class BoardView extends JFrame implements BoardObserver {
     }
 
     private void buildActions(JPanel jp_buttons) {
-        jp_buttons.add(new JButton("Mover Peça"), Action.MOVE);
-        jp_buttons.add(new JButton("Iniciar Ataque"), Action.ATTACK);
-        jp_buttons.add(new JButton("Sobrecarregar"), Action.OVERCHARGE);
-        jp_buttons.add(new JButton("Ataque Especial"), Action.SPECIAL_ATTACK);
-        jp_buttons.add(new JRadioButton("Ataque Armado"), Action.ARMED_ATTACK);
-        jp_buttons.add(new JButton("Cancelar Ação"), Action.CANCEL);
+        jp_buttons.add(new JButton("Mover Peça"), View.Action.MOVE);
+        jp_buttons.add(new JButton("Iniciar Ataque"), View.Action.ATTACK);
+        jp_buttons.add(new JButton("Sobrecarregar"), View.Action.OVERCHARGE);
+        jp_buttons.add(new JButton("Ação Especial"), View.Action.SPECIAL_MOVE);
+        jp_buttons.add(new JButton("Ataque Armado"), View.Action.ARMED_ATTACK);
+        jp_buttons.add(new JButton("Cancelar Ação"), View.Action.CANCEL);
         addButtonActions(jp_buttons);
         toggleAllButtons(jp_buttons, false);
     }
 
     private void addButtonActions(JPanel jp_buttons){
-        jp_buttons.getComponent(Action.MOVE.getIndex()).addMouseListener(new MouseAdapter() {
+        jp_buttons.getComponent(View.Action.MOVE.getIndex()).addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e){
                 try {
@@ -167,7 +163,7 @@ public class BoardView extends JFrame implements BoardObserver {
                 }
             }
         });
-        jp_buttons.getComponent(Action.ATTACK.getIndex()).addMouseListener(new MouseAdapter() {
+        jp_buttons.getComponent(View.Action.ATTACK.getIndex()).addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e){
                 try {
@@ -177,7 +173,7 @@ public class BoardView extends JFrame implements BoardObserver {
                 }
             }
         });
-        jp_buttons.getComponent(Action.OVERCHARGE.getIndex()).addMouseListener(new MouseAdapter() {
+        jp_buttons.getComponent(View.Action.OVERCHARGE.getIndex()).addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e){
 
@@ -188,13 +184,28 @@ public class BoardView extends JFrame implements BoardObserver {
                 }
             }
         });
-        jp_buttons.getComponent(Action.SPECIAL_ATTACK.getIndex()).addMouseListener(new MouseAdapter() {
+        jp_buttons.getComponent(View.Action.ARMED_ATTACK.getIndex()).addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e){
-                //BoardController.getInstance().prepareCommand(new ActionEvent(e.getSource(), command_id++, Action.SPECIAL_ATTACK.toString()));
+
+                try {
+                    BoardController.getInstance().prepareCommand(new AttackDistanceCommandoFactory());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         });
-        jp_buttons.getComponent(Action.CANCEL.getIndex()).addMouseListener(new MouseAdapter() {
+        jp_buttons.getComponent(View.Action.SPECIAL_MOVE.getIndex()).addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e){
+                try {
+                    BoardController.getInstance().prepareCommand(new SpecialMoveCommandoFactory());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        jp_buttons.getComponent(View.Action.CANCEL.getIndex()).addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e){
                 BoardController.getInstance().releasePiece();
@@ -205,15 +216,15 @@ public class BoardView extends JFrame implements BoardObserver {
     }
 
     private void toggleAllButtons(JPanel jp_buttons, boolean enabled){
-        toggleAction(jp_buttons, enabled, Action.MOVE);
-        toggleAction(jp_buttons, enabled, Action.OVERCHARGE);
-        toggleAction(jp_buttons, enabled, Action.ATTACK);
-        toggleAction(jp_buttons, enabled, Action.ARMED_ATTACK);
-        toggleAction(jp_buttons, enabled, Action.SPECIAL_ATTACK);
-        toggleAction(jp_buttons, enabled, Action.CANCEL);
+        toggleAction(jp_buttons, enabled, View.Action.MOVE);
+        toggleAction(jp_buttons, enabled, View.Action.OVERCHARGE);
+        toggleAction(jp_buttons, enabled, View.Action.ATTACK);
+        toggleAction(jp_buttons, enabled, View.Action.ARMED_ATTACK);
+        toggleAction(jp_buttons, enabled, View.Action.SPECIAL_MOVE);
+        toggleAction(jp_buttons, enabled, View.Action.CANCEL);
     }
 
-    public void toggleAction(JPanel jp_buttons ,boolean enable, Action action){
+    public void toggleAction(JPanel jp_buttons ,boolean enable, View.Action action){
         jp_buttons.getComponent(action.getIndex()).setEnabled(enable);
     }
 

@@ -11,6 +11,26 @@ public class SoldierMachine extends MachineSoldierEntity {
         super(machineBuilder);
     }
 
+    @Override
+    public int getAmmo() {
+        return 0;
+    }
+
+    @Override
+    public void setAmmo(int ammo) {
+
+    }
+
+    @Override
+    public void shoot() {
+
+    }
+
+    @Override
+    public void reload() {
+
+    }
+
     public static class MachineBuilder extends AbstractMachineBuilder {
 
         @Override

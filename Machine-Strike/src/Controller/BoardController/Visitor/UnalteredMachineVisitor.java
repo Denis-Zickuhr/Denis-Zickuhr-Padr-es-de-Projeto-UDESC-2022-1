@@ -2,6 +2,7 @@ package Controller.BoardController.Visitor;
 
 import Model.AbstractModel.AbstractMachine.Machine;
 import Model.ConcreteModel.ConcreteMachine.Armed.KingArmedMachine;
+import Model.ConcreteModel.ConcreteMachine.Armed.SoldierArmedMachine;
 import Model.ConcreteModel.ConcreteMachine.Basic.KingMachine;
 import Model.ConcreteModel.ConcreteMachine.Basic.QueenMachine;
 import Model.Terrain.Terrain;
@@ -35,7 +36,11 @@ public class UnalteredMachineVisitor implements MachineVisitor{
         }
 
         public boolean canSpecialAttack() {
-            return machine.getClass() == KingMachine.class || machine.getClass() == QueenMachine.class || machine.getClass() == KingArmedMachine.class;
+            return (machine.getClass() == KingMachine.class || machine.getClass() == QueenMachine.class || machine.getClass() == KingArmedMachine.class) & !machine.isSpecial();
+        }
+
+        public boolean canLongRange() {
+            return machine.getAmmo() > 0;
         }
 
         public boolean canCancel() {

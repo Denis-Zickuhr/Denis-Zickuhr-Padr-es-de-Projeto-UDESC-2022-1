@@ -18,4 +18,21 @@ public class KingArmedMachine extends MachineKingEntity {
         super();
         setBuffer(new String[]{"Assets\\#kingarmed.png"});
     }
+
+    public int getAmmo() {
+        return ammo;
+    }
+
+    public void setAmmo(int ammo){
+        this.ammo = ammo;
+    }
+
+    public void shoot(){
+        this.ammo--;
+    }
+
+    public void reload(){
+        this.ammo++;
+    }
+
 }

@@ -4,6 +4,6 @@ import Model.AbstractModel.AbstractMachine.Machine;
 
 public interface MovementBehaviourAdapter {
 
-    boolean specialAttack(Machine... machine) throws Exception;
+    void specialAttack(boolean reverse) throws Exception;
 
 }

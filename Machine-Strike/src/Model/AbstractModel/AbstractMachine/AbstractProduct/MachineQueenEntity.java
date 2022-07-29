@@ -8,13 +8,19 @@ public abstract class MachineQueenEntity extends Machine {
 
     public MachineQueenEntity() {
         setHealth(2);
-        setAttackPoints(10);
+        setAttackPoints(8);
         setAttackDistance(1);
-        setMoveSpan(1);
-        setArmors(new Armor[]{Armor.Resistant, Armor.Resistant, Armor.Weak, Armor.Resistant});
+        setMoveSpan(7);
         setMovement(new MovementAdapterQueen(this));
     }
 
-    public void Stone(){}
+    public void stone(){
+        setHealth(getHealth()+10);
+        setHealth(getMoveSpan()-3);
+    }
+    public void destone(){
+        setHealth(getHealth()-10);
+        setHealth(getMoveSpan()+3);
+    }
 
 }

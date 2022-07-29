@@ -1,6 +1,7 @@
 package Controller.PointCounterController;
 
-import Controller.MachineSelection.MachineSelectionObserver;
+import Controller.BoardController.BoardController;
+import Controller.BoardController.Command.CommandInvoker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,4 +27,19 @@ public class PointCounterController {
             obs.update();
         }
     }
+
+    public void redo() throws Exception {
+        CommandInvoker.getCommandInvoker().redo();
+    }
+
+    public void undo() throws Exception {
+        CommandInvoker.getCommandInvoker().undo();
+    }
+
+    public void swap(){
+        BoardController.getInstance().getTurn().block();
+        BoardController.getInstance().toggleTurn();
+        propagateUpdate();
+    }
+
 }

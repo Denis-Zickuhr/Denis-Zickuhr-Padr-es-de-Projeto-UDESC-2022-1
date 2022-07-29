@@ -6,7 +6,7 @@ public abstract class Weapon {
     protected int attackPoints;
     protected int attackDistance;
     protected int moveSpan;
-    protected int radRadius;
+    protected int ammo;
     protected String s = "#";
     protected String b = ".png";
     protected String[] buffer;
@@ -17,7 +17,6 @@ public abstract class Weapon {
         this.attackPoints = 0;
         this.attackDistance = 0;
         this.moveSpan = 0;
-        this.radRadius = 0;
     }
 
     public String[] getBuffer() {
@@ -40,7 +39,7 @@ public abstract class Weapon {
         return moveSpan;
     }
 
-    public int getRadRadius() {
-        return radRadius;
+    public int getAmmo() {
+        return ammo;
     }
 }

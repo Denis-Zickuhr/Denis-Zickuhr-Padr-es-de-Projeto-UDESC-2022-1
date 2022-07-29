@@ -12,15 +12,23 @@ public abstract class Machine extends TeamMember implements Cloneable {
     protected int attackPoints;
     protected int attackDistance;
     protected int moveSpan;
-    protected Armor[] armors = new Armor[4];
     protected String[] buffer;
     protected MovementBehaviourAdapter movement;
     protected int attacks = 1;
     protected int movements = 1;
     protected boolean overcharged = false;
+    protected boolean special = false;
 
     public MovementBehaviourAdapter getAdapter() {
         return movement;
+    }
+
+    public boolean isSpecial() {
+        return special;
+    }
+
+    public void setSpecial(boolean special) {
+        this.special = special;
     }
 
     public void setMovement(MovementBehaviourAdapter movement) {
@@ -84,13 +92,13 @@ public abstract class Machine extends TeamMember implements Cloneable {
         this.moveSpan = moveSpan;
     }
 
-    public Armor[] getArmors() {
-        return armors;
-    }
+    abstract public int getAmmo();
 
-    public void setArmors(Armor[] armors) {
-        this.armors = armors;
-    }
+    abstract public void setAmmo(int ammo);
+
+    abstract public void shoot();
+
+    abstract public void reload();
 
     @Override
     public int getPoints() {

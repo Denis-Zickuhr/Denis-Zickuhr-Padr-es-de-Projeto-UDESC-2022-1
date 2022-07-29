@@ -2,8 +2,8 @@ package Model.ConcreteModel.ConcreteMachine.BuilderParts.Heads;
 
 public class HeadBlue extends Head {
     public HeadBlue() {
-        this.health = 10;
-        this.attackPoints = 10;
+        this.health = 2;
+        this.attackPoints = 1;
         this.attackDistance = 1;
         this.moveSpan = 0;
         String a = "blue";

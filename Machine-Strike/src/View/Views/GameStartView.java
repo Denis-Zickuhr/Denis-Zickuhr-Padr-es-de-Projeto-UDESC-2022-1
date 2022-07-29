@@ -1,6 +1,5 @@
-package View;
+package View.Views;
 
-import Controller.MachineSelection.MachineSelectionController;
 import Model.Packer;
 
 import javax.swing.*;

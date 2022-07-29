@@ -10,7 +10,6 @@ public abstract class MachineSoldierEntity extends Machine {
         setAttackPoints(machineBuilder.getAttackPoints());
         setAttackDistance(machineBuilder.getAttackDistance());
         setMoveSpan(machineBuilder.getMoveSpan());
-        setArmors(machineBuilder.getArmors());
         setBuffer(machineBuilder.getBuffer());
         setMovement(new MovementAdapterSoldier());
     }

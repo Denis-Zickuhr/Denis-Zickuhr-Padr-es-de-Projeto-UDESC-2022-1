@@ -2,8 +2,8 @@ package Model.ConcreteModel.ConcreteMachine.BuilderParts.Torsos;
 
 public class TorsoPink extends Torso {
     public TorsoPink() {
-        this.health = 10;
-        this.attackPoints = 10;
+        this.health = 1;
+        this.attackPoints = 0;
         this.attackDistance = 1;
         this.moveSpan = 0;
         String a = "pink";

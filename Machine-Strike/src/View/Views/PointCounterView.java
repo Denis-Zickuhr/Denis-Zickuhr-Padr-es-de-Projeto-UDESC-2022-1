@@ -1,4 +1,4 @@
-package View;
+package View.Views;
 
 import Controller.BoardController.BoardController;
 import Controller.BoardController.Command.CommandFactory.MoveCommandoFactory;
@@ -18,6 +18,7 @@ public class PointCounterView extends JFrame implements PointControllerObserver 
     JPanel placar = new JPanel(new BorderLayout());
     JLabel pontos1 = new JLabel();
     JLabel pontos2 = new JLabel();
+    JPanel jp_buttons;
 
     public PointCounterView() throws Exception {
 
@@ -28,7 +29,7 @@ public class PointCounterView extends JFrame implements PointControllerObserver 
         setContentPane(jp_contentPane);
 
         setBackground(Color.WHITE);
-        setSize(new Dimension(150,300));
+        setSize(new Dimension(350,300));
 
         setTitle("Contador de pontos");
 
@@ -37,9 +38,9 @@ public class PointCounterView extends JFrame implements PointControllerObserver 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 
-        pontos1.setFont(new Font(Font.MONOSPACED, Font.BOLD,90));
+        pontos1.setFont(new Font(Font.MONOSPACED, Font.BOLD,128));
         pontos1.setForeground(Color.blue);
-        pontos2.setFont(new Font(Font.MONOSPACED, Font.BOLD,90));
+        pontos2.setFont(new Font(Font.MONOSPACED, Font.BOLD,128));
         pontos2.setForeground(Color.red);
         placar.add(pontos1, BorderLayout.WEST);
         placar.add(pontos2, BorderLayout.EAST);
@@ -52,10 +53,10 @@ public class PointCounterView extends JFrame implements PointControllerObserver 
 
     private void loadScreen() {
         setVisible(true);
-        JPanel jp_buttons = new JPanel();
+        jp_buttons = new JPanel();
         jp_buttons.add(new JButton("redo"), 0);
         jp_buttons.add(new JButton("undo"), 1);
-
+        jp_buttons.add(new JButton("swap turn"), 2);
         this.add(jp_buttons, BorderLayout.SOUTH);
         loadButtonsEvents(jp_buttons);
     }
@@ -65,9 +66,8 @@ public class PointCounterView extends JFrame implements PointControllerObserver 
             @Override
             public void mousePressed(MouseEvent e){
                 try {
-                    CommandInvoker.getCommandInvoker().redo();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                    PointCounterController.getInstance().redo();
+                } catch (Exception ignored) {
                 }
             }
         });
@@ -75,9 +75,17 @@ public class PointCounterView extends JFrame implements PointControllerObserver 
             @Override
             public void mousePressed(MouseEvent e){
                 try {
-                    CommandInvoker.getCommandInvoker().undo();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                    PointCounterController.getInstance().undo();
+                } catch (Exception ignored) {
+                }
+            }
+        });
+        jp_buttons.getComponent(2).addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e){
+                try {
+                    PointCounterController.getInstance().swap();
+                } catch (Exception ignored) {
                 }
             }
         });
@@ -93,13 +101,18 @@ public class PointCounterView extends JFrame implements PointControllerObserver 
         pontos1.setText(""+Board.getPlayer1().getPoints());
         pontos2.setText(Board.getPlayer2().getPoints()+"");
         placar.updateUI();
+        if(Board.getPlayer1().getPoints() == 0){
+            placar.setBackground(new Color(0xE87676));
+            pontos1.setText(""+Board.getPlayer1().getPoints());
+            Board.getPlayer1().block();
+            Board.getPlayer2().block();
+        } else if(Board.getPlayer2().getPoints() == 0){
+            placar.setBackground(new Color(0x3992EC));
+            pontos2.setText("");
+            Board.getPlayer1().block();
+            Board.getPlayer2().block();
+        }
         this.repaint();
     }
-
-    @Override
-    public void post() {
-
-    }
-
 
 }

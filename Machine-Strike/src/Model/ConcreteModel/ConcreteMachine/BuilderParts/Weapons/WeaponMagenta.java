@@ -2,10 +2,8 @@ package Model.ConcreteModel.ConcreteMachine.BuilderParts.Weapons;
 
 public class WeaponMagenta extends Weapon {
     public WeaponMagenta() {
-        this.health = 10;
-        this.attackPoints = 10;
-        this.attackDistance = 1;
-        this.moveSpan = 0;
+        this.attackPoints = 50;
+        this.ammo = 1;
         String a = "grenade";
         this.buffer = new String[]{"Assets\\"+s+a+b};
     }

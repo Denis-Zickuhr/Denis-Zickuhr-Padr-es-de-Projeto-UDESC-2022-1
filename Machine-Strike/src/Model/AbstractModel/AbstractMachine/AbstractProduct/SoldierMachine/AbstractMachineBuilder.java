@@ -8,7 +8,7 @@ import Model.ConcreteModel.ConcreteMachine.BuilderParts.Legs.Leg;
 import Model.ConcreteModel.ConcreteMachine.BuilderParts.Weapons.Weapon;
 import Model.ConcreteModel.ConcreteMachine.BuilderParts.Torsos.Torso;
 
-public abstract class AbstractMachineBuilder extends Machine {
+public abstract class AbstractMachineBuilder{
 
     protected int health;
     protected int attackPoints;
@@ -28,7 +28,6 @@ public abstract class AbstractMachineBuilder extends Machine {
         head = null;
         leg = null;
         torso = null;
-        armors = new Armor[]{Armor.Neutral, Armor.Neutral, Armor.Neutral, Armor.Neutral};
     }
 
     public AbstractMachineBuilder addHead(Head head) {
@@ -95,10 +94,6 @@ public abstract class AbstractMachineBuilder extends Machine {
 
     }
 
-    public void buildArmor(Plate plate, Armor armor) {
-        this.armors[plate.getValue()] = armor;
-    }
-
     public int getHealth() {
         return health;
     }
@@ -113,10 +108,6 @@ public abstract class AbstractMachineBuilder extends Machine {
 
     public int getMoveSpan() {
         return moveSpan;
-    }
-
-    public Armor[] getArmors() {
-        return armors;
     }
 
     public String[] getBuffer() {

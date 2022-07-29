@@ -1,7 +1,7 @@
 package View;
 
 public enum Action {
-    MOVE(0), ATTACK(1), OVERCHARGE(2), SPECIAL_ATTACK(3), ARMED_ATTACK(4), CANCEL(5);
+    MOVE(0), ATTACK(1), OVERCHARGE(2), SPECIAL_MOVE(3), ARMED_ATTACK(4), CANCEL(5);
 
     int index;
 

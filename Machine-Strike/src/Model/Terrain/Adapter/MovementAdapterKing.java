@@ -12,8 +12,11 @@ public class MovementAdapterKing implements MovementBehaviourAdapter {
     }
 
     @Override
-    public boolean specialAttack(Machine... machine) {
-        adaptee.KingShine();
-        return false;
+    public void specialAttack(boolean reverse) {
+        if(reverse){
+            adaptee.kingDarken();
+        }else{
+            adaptee.KingShine();
+        }
     }
 }

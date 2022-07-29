@@ -7,7 +7,6 @@ import Controller.MachineSelection.State.MachineSelectionState;
 import Model.AbstractModel.AbstractMachine.AbstractProduct.SoldierMachine.AbstractStrategy.AbstractStrategy;
 import Model.Board;
 import Model.ConcreteModel.ConcreteMachine.ConcreteStrategy.*;
-import View.MachineSelectionView;
 
 import java.util.ArrayList;
 import java.util.List;

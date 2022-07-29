@@ -2,8 +2,8 @@ package Model.ConcreteModel.ConcreteMachine.BuilderParts.Torsos;
 
 public class TorsoCyan extends Torso {
     public TorsoCyan() {
-        this.health = 10;
-        this.attackPoints = 10;
+        this.health = 1;
+        this.attackPoints = 2;
         this.attackDistance = 1;
         this.moveSpan = 0;
         String a = "cyan";

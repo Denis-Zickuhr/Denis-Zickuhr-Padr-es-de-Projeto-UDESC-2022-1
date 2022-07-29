@@ -16,6 +16,18 @@ public class SoldierArmedMachine extends MachineSoldierEntity {
         return ammo;
     }
 
+    public void setAmmo(int ammo){
+        this.ammo = ammo;
+    }
+
+    public void shoot(){
+        this.ammo--;
+    }
+
+    public void reload(){
+        this.ammo++;
+    }
+
     @Override
     public String toString() {
         return super.toString() +
@@ -29,9 +41,8 @@ public class SoldierArmedMachine extends MachineSoldierEntity {
 
     public static class MachineBuilder extends AbstractMachineBuilder {
 
-        Random r = new Random();
-        private final int ammo = r.nextInt(10);
         private Weapon weapon;
+        private int ammo;
 
         public int getAmmo() {
             return ammo;
@@ -59,6 +70,7 @@ public class SoldierArmedMachine extends MachineSoldierEntity {
             this.attackPoints += weapon.getAttackPoints();
             this.attackDistance += weapon.getAttackDistance();
             this.moveSpan += weapon.getMoveSpan();
+            this.ammo = weapon.getAmmo();
             this.buffer[3] = weapon.getBuffer()[0];
             return this;
 
